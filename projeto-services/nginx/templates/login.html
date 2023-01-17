@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Login</title>
+    <link rel="stylesheet" href="styles-login.css">
+  </head>
+  <body>
+    <form action="/login" method="post">
+      <label for="username">Username:</label>
+      <input type="text" id="username" name="username" required>
+      <br>
+      <label for="password">Password:</label>
+      <input type="password" id="password" name="password" required>
+      <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>">
+      <br>
+      <input type="submit" value="Login">
+    </form>
+  </body>
+</html>

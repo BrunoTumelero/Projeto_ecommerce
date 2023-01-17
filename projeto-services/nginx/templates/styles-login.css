@@ -1,0 +1,37 @@
+
+      /* Centralizando o formulário na página */
+      form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* Estilizando os labels */
+      label {
+        font-weight: bold;
+      }
+
+      /* Estilizando os inputs */
+      input[type="text"], input[type="password"] {
+        padding: 0.5em;
+        margin-bottom: 0.5em;
+        font-size: 1em;
+        border-radius: 0.5em;
+        border: 1px solid gray;
+      }
+
+      /* Estilizando o botão de login */
+      input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 0.5em 1em;
+        border: none;
+        border-radius: 0.5em;
+        cursor: pointer;
+      }
+
+      /* Mudando a cor do texto do botão quando o mouse estiver sobre ele */
+      input[type="submit"]:hover {
+        background-color: #3e8e41;
+      }

@@ -1,0 +1,39 @@
+version: '3.6'
+
+services:
+  #nginx:
+  #    build:
+  #      context: ./projeto-services/nginx
+  #      dockerfile: Dockerfile
+  #    restart: always
+  #    ports:
+  #      - 80:80
+  #      - 443:443
+  #    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+  #    depends_on:
+  #      - client
+
+  client:
+    build:
+      context: ./projeto-services/client
+      dockerfile: Dockerfile
+    restart: always
+    command: gunicorn --bind 0.0.0.0:8000 --timeout 600 --workers 2 client.wsgi
+    volumes:
+      - './projeto-services/client:/app'
+      - './projeto-services/client/bkps:/app/bkps'
+    ports:
+      - "8012:8000"
+    depends_on:
+      - client-db
+
+  client-db:
+    image: postgres:15.1-alpine 
+    restart: always
+    command: postgres -c 'shared_buffers=256MB' -c 'max_connections=200' -c 'shared_preload_libraries=pg_stat_statements' -c 'pg_stat_statements.max=10000' -c 'pg_stat_statements.track=all'
+    ports:
+      - "5858:5432"
+    environment:
+     - POSTGRES_DB=projetodev
+     - POSTGRES_USER=projetodev
+     - POSTGRES_PASSWORD=programacao75_full
