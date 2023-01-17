@@ -5,7 +5,7 @@ from django.db import IntegrityError
 
 from client.register.models import *
 from client.public.utils import _create_token
-from client.company.forms import CompanySpecialtyForm
+from client.company.forms import CompanySpecialtyForm, ProductsForm
 
 @csrf_exempt
 def create_company(request):
@@ -34,7 +34,7 @@ def create_company(request):
             user.is_active = True
             user.is_company = True
             session_token = _create_token(user)
-            user.save()
+            
             try:
                 city = City.objects.get(name=city)
             except City.DoesNotExist:
@@ -70,6 +70,7 @@ def create_company(request):
                 )
 
                 company.save()
+                user.save()
 
                 #vincula a empresa ao usuário
                 company.user.company = company
@@ -107,3 +108,22 @@ def create_specialty(request):
                 form.save()
                 return JsonResponse({'message': 'Especialidade salva com sucesso', 'status': 200})
     return JsonResponse({'message': 'Erro ao salvar especialidade', 'status': 400})
+
+@csrf_exempt
+def create_new_product(request):
+    data = request.POST.copy()
+
+    if data['product_name']:
+        try:
+            product = Products.objects.get(product_name=data['product_name'])
+            form = ProductsForm(instance=product, data=data)
+        except Products.DoesNotExist:
+            form = ProductsForm(data=data)
+        
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Produto adicionado com sucesso', 'status': 200})
+        else:
+            return JsonResponse({'message': 'Erro ao salvar o produto', 'error': form.errors, 'status':404})
+    
+    return JsonResponse({'message': 'Erro ao adicionar o produto', 'status': 400})

@@ -15,6 +15,10 @@ class AbstractBaseModel(models.Model):
         abstract = True
 
 class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
+    company = models.ForeignKey('register.Company',
+                                related_name='users',
+                                on_delete=models.SET_NULL,
+                                null=True)
     email = models.EmailField(name="email", unique=True)
     date_joined = models.DateField(name="date joined", auto_now_add=True)
     is_company = models.BooleanField(default=False)
@@ -130,7 +134,7 @@ class Company(AbstractBaseUser):
     business_name = models.CharField(max_length=200)
     public_name = models.CharField(max_length=200)
     business_phone = models.CharField(max_length=12)
-    business_specialty = models.ForeignKey('register.CompanySpecialty', on_delete=models.CASCADE, related_name='type_company')
+    business_specialty = models.ForeignKey('register.CompanySpecialty', on_delete=models.CASCADE, related_name='type_company', null=True)
     plan = models.CharField(max_length=10,
                             choices=PLAN_CHOICES)
 
@@ -157,5 +161,6 @@ class BusinessTransfer(AbstractBaseModel):
 class Products(AbstractBaseModel):
     company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='product_company')
     product_name = models.CharField(max_length=200)
-    product_categori = models.CharField(max_length=100)
+    product_categori = models.CharField(max_length=100, null=True, blank=True)
     product_price = models.CharField(max_length=10)
+    is_avalable = models.BooleanField()
