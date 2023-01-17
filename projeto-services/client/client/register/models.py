@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
+from django.contrib.auth.models import PermissionsMixin
 from django.conf import settings
 
 from .managers import UserManager
@@ -13,7 +14,7 @@ class AbstractBaseModel(models.Model):
     class Meta:
         abstract = True
 
-class User(AbstractBaseModel, AbstractBaseUser):
+class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(name="email", unique=True)
     date_joined = models.DateField(name="date joined", auto_now_add=True)
     is_company = models.BooleanField(default=False)
@@ -114,7 +115,7 @@ class Company(AbstractBaseUser):
                                 related_name='company_name')
     
     name_owner = models.CharField(max_length=150)
-    email_owner = models.EmailField()
+    email_owner = models.CharField(max_length=100, blank=True, null=True)
     phone_owner = models.CharField(max_length=12)
     cep = models.CharField(max_length=10)
     state = models.ForeignKey('register.State', on_delete=models.CASCADE, related_name='state_company')
@@ -130,7 +131,8 @@ class Company(AbstractBaseUser):
     public_name = models.CharField(max_length=200)
     business_phone = models.CharField(max_length=12)
     business_specialty = models.ForeignKey('register.CompanySpecialty', on_delete=models.CASCADE, related_name='type_company')
-    plan = models.BooleanField(choices=PLAN_CHOICES)
+    plan = models.CharField(max_length=10,
+                            choices=PLAN_CHOICES)
 
 class City(AbstractBaseModel):
     name = models.CharField(max_length=100)
