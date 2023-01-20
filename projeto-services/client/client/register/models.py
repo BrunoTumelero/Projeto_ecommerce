@@ -54,7 +54,8 @@ class Consumers(AbstractBaseModel):
     )
     user = models.OneToOneField(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,
-                                primary_key=True)
+                                primary_key=True,
+                                related_name='consumer_name')
 
     full_name = models.CharField(max_length=250, null=False, blank=False)
     cpf = models.CharField(max_length=15)
@@ -103,7 +104,7 @@ class ConsumersCards(AbstractBaseModel):
                                 choices=CARDS_CHOICES,
                                 null=False, blank=False)
 
-class Company(AbstractBaseUser):
+class Company(AbstractBaseModel):
 
     PLAN_BASIC = "plan_basic"
     PLAN_PREMIUM = "plan_premium"
