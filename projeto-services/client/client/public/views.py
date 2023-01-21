@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from .utils import _create_token
 from .forms import StateForm, CityForm
 from client.register.models import State, City
+from client.public.decorators import staff_autentication
 
 @csrf_exempt
 def login(request):
@@ -37,6 +38,7 @@ def login(request):
         return JsonResponse({'message':'Usuário ou senha inválido.', 'status': 400})
 
 @csrf_exempt
+@staff_autentication
 def create_state(request):
     data = request.POST.copy()
 
@@ -59,6 +61,7 @@ def create_state(request):
     return JsonResponse({'message': 'Estado inválido', 'status': 400})
 
 @csrf_exempt
+@staff_autentication
 def create_city(request):
     data = request.POST.copy()
 

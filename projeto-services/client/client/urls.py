@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import include, url
+from django.conf import settings
 
 from client.login import urls as login_urls
 from client.public import urls as public_urls

@@ -26,7 +26,7 @@ class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(name="superuser", default=False)
     is_staff = models.BooleanField(name= "staff", default=False)
 
-    session_token = models.CharField(max_length=64)
+    session_token = models.CharField(max_length=64, blank=True, null=True)
     activation_key = models.CharField(max_length=64)
     objects = UserManager()
 
@@ -35,6 +35,7 @@ class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
 
     class Meta:
         verbose_name = "user"
+        verbose_name_plural = "users"
 
 class UserSession(AbstractBaseModel):
 

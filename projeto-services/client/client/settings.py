@@ -1,18 +1,19 @@
 import os
 
+from decouple import Csv
 from pathlib import Path
 from dotenv import load_dotenv, dotenv_values
 from decouple import config
 from dj_database_url import parse as dburl
 
+print("Loading ENV variables..")
 env_path = '/app/.env'
 dotenv_conf = dotenv_values(env_path)
 print(dotenv_conf)
 load_dotenv(dotenv_path=env_path, verbose=True)
 
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -22,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['*'], cast=Csv())
+SERVER_URL = config('SERVER_URL', default='http://localhost:8000')
 
 # Application definition
 
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.postgres',
     'client.register',
     'client.login',
     'client.consumer',
@@ -148,3 +150,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 #login
 
 LOGIN_URL = '/login'
+
+STAGING = config('STAGING', cast=bool, default=True)
