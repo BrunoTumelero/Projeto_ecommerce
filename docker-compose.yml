@@ -20,12 +20,14 @@ services:
     restart: always
     command: gunicorn --bind 0.0.0.0:8000 --timeout 600 --workers 2 client.wsgi
     volumes:
-      - './projeto-services/client:/app'
-      - './projeto-services/client/bkps:/app/bkps'
+      - './projeto-services/client:/usr/src/app'
+      - './projeto-services/client/bkps:/usr/src/app/bkps'
     ports:
       - "8012:8000"
     depends_on:
       - client-db
+    environment:
+      - PYTHONUNBUFFERED=0 #Mostra infos no log do container
 
   client-db:
     image: postgres:15.1-alpine 

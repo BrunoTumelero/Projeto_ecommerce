@@ -1,11 +1,11 @@
 FROM python:3.6-slim
 
 #set directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 #copy requirements
-COPY ./requirements.txt /app/requirements.txt
-COPY ./.env /app/.env
+COPY ./requirements.txt /usr/src/app/requirements.txt
+COPY ./.env /usr/src/app/.env
 
 #install dependencies
 RUN apt-get update -y && \
@@ -22,4 +22,4 @@ RUN apt-get update -y && \
 	yes Y | apt-get install postgresql-client
     
 #add app
-COPY . /app
+COPY . /usr/src/app
