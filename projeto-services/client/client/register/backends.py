@@ -2,6 +2,9 @@ from .models import User, UserSession
 from django.contrib.auth.backends import ModelBackend
 
 class SessionTokenAuthBackend(ModelBackend):
+    """
+        Validation backend
+    """
 
     def authenticate(self, request=None, session_token=None, **kwargs):
         if session_token:

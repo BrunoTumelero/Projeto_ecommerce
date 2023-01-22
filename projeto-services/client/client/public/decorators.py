@@ -2,7 +2,9 @@ from django.contrib.auth import authenticate
 from django.http import JsonResponse
 
 def user_authenticate(function):
-
+    """
+        Validation of users
+    """
     def wrap(request, *args, **kwargs):
         user = authenticate(session_token=request.POST.get('_token', None))
 
@@ -17,8 +19,11 @@ def user_authenticate(function):
     wrap.__name__ = function.__name__
 
     return wrap
-    
+
 def company_autentication(function):
+    """
+        Validation of company
+    """
 
     def find_token(request, *args, **kwargs):
         if hasattr(request, 'user') and not request.user.is_company:
@@ -32,6 +37,9 @@ def company_autentication(function):
     return find_token
 
 def staff_autentication(codename):
+    """
+        Validation of staff
+    """
 
     def method_token(function):
 
