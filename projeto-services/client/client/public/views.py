@@ -4,7 +4,7 @@ from django.http import JsonResponse
 
 from .utils import _create_token
 from .decorators import user_authenticate
-from client.register.models import UserSession, Log, User, Permission
+from client.register.models import UserSession, Log, User, Permission, Products, ProductCategory
 
 @csrf_exempt
 def login(request):
@@ -76,3 +76,15 @@ def log_session(request):
             'permissions': permissions,
             'status': 200
         })
+
+@csrf_exempt
+def get_products(request):
+    products = [product.to_product_json() for product in Products.objects.all()]
+
+    return JsonResponse({'Products': products, 'status': 200})
+
+@csrf_exempt
+def get_products_category(request):
+    products = [product.to_json() for product in ProductCategory.objects.all()]
+
+    return JsonResponse({'Products': products, 'status': 200})

@@ -165,9 +165,30 @@ class BusinessTransfer(AbstractBaseModel):
 class Products(AbstractBaseModel):
     company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='product_company')
     product_name = models.CharField(max_length=200)
-    product_categori = models.CharField(max_length=100, null=True, blank=True)
+    product_category = models.ManyToManyField('register.ProductCategory', blank=True, related_name='category_product')
     product_price = models.CharField(max_length=10)
-    is_avalable = models.BooleanField()
+    is_avalable = models.BooleanField(default=False)
+
+    def to_product_json(self):
+        return {
+            'id': self.pk,
+            'company': self.company.pk,
+            'product': self.product_name,
+            #'category': self.product_category.to_json(),
+            'price': self.product_price,
+            'is_avaliable': self.is_avalable
+        }
+
+class ProductCategory(AbstractBaseModel):
+    category = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+
+    def to_json(self):
+        return {
+            'id': self.pk,
+            'name': self.category,
+            'description': self.description
+        }
 
 class Log(AbstractBaseModel):
     user = models.ForeignKey('register.User', on_delete=models.CASCADE)

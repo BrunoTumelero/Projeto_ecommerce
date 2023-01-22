@@ -2,9 +2,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import staff_authenticate
-from client.register.models import State, City
-from .forms import StateForm, CityForm
-from client.register.models import User
+from client.register.models import State, City, ProductCategory, User, CompanySpecialty
+from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm
 
 @csrf_exempt
 @staff_authenticate
@@ -109,3 +108,47 @@ def delete_account(request):
     user.delete()
 
     return JsonResponse({'message': 'Usuário deletado com sucesso', 'status': 200})
+
+@csrf_exempt
+@staff_authenticate
+def create_specialty(request):
+    data = request.POST.copy()
+
+    if data['specialty']:
+        try:
+            type_specialty = CompanySpecialty.objects.get(specialty=data['specialty'])
+            form = CompanySpecialtyForm(instance=type_specialty, data=data)
+
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'message': 'Especialidade salva com sucesso', 'status': 200})
+        except CompanySpecialty.DoesNotExist:
+            form = CompanySpecialtyForm(data=data)
+
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'message': 'Especialidade salva com sucesso', 'status': 200})
+    return JsonResponse({'message': 'Erro ao salvar especialidade', 'status': 400})
+
+@csrf_exempt
+@staff_authenticate
+def create_product_category(request):
+    data = request.POST.copy()
+    print(data)
+
+    if data['category']:
+        try:
+            cat = ProductCategory.objects.get(category=data['category'])
+            form = ProductCategoryForm(instance=cat, data=data)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'message': 'Categoria adicionada comsucesso', 'status': 200})
+        except ProductCategory.DoesNotExist:
+            form = ProductCategoryForm(data=data)
+            if form.is_valid():
+                form.save()
+                return JsonResponse({'message': 'Categoria adicionada comsucesso', 'status': 200})
+            else:
+                print(form.errors)
+                return JsonResponse({'message': 'Erro', 'status': 400})
+    return JsonResponse({'message': 'Informe a categoria', 'status': 400})
