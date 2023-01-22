@@ -181,3 +181,27 @@ class Permission(AbstractBaseModel):
 class UserPermission(AbstractBaseModel):
     user = models.ForeignKey('register.User', on_delete=models.PROTECT, related_name='permissions')
     permission = models.ForeignKey('register.Permission', on_delete=models.PROTECT, related_name='user_permissions')
+
+class CompanyPermission(AbstractBaseModel):
+    permicted = models.CharField(max_length=80)
+    description = models.CharField(max_length=80)
+
+class UserCompanyPermission(AbstractBaseModel):
+    LEVEL_ADM = 'administrator'
+    LEVEL_CLERK = 'clerk'
+
+    LEVEL_CHOICES = (
+        (LEVEL_ADM, 'Administrativo'),
+        (LEVEL_CLERK, 'Atendimento')
+    )
+
+    user = models.ForeignKey('register.User',
+                            on_delete=models.PROTECT)
+    company = models.ForeignKey('register.Company',
+                                on_delete=models.PROTECT)
+    permission = models.ForeignKey('register.CompanyPermission',
+                                    on_delete=models.PROTECT)
+    level = models.CharField(max_length=6,
+                            choices=LEVEL_CHOICES,
+                            default=LEVEL_CLERK)
+    
