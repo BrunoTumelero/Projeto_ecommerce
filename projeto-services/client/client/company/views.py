@@ -5,7 +5,7 @@ from django.db import IntegrityError
 
 from client.register.models import *
 from client.public.utils import _create_token
-from client.company.forms import CompanySpecialtyForm, ProductsForm
+from client.company.forms import ProductsForm
 from client.public.decorators import company_autentication, user_authenticate
 
 @csrf_exempt
@@ -89,28 +89,6 @@ def create_company(request):
                 return JsonResponse({'message': 'Emais já cadastrado', 'status': 400})
 
     return JsonResponse({'message': 'Erro', 'status': 400})
-
-@csrf_exempt
-@company_autentication
-@user_authenticate
-def create_specialty(request):
-    data = request.POST.copy()
-
-    if data['specialty']:
-        try:
-            type_specialty = CompanySpecialty.objects.get(specialty=data['specialty'])
-            form = CompanySpecialtyForm(instance=type_specialty, data=data)
-
-            if form.is_valid():
-                form.save()
-                return JsonResponse({'message': 'Especialidade salva com sucesso', 'status': 200})
-        except CompanySpecialty.DoesNotExist:
-            form = CompanySpecialtyForm(data=data)
-
-            if form.is_valid():
-                form.save()
-                return JsonResponse({'message': 'Especialidade salva com sucesso', 'status': 200})
-    return JsonResponse({'message': 'Erro ao salvar especialidade', 'status': 400})
 
 @csrf_exempt
 @user_authenticate
