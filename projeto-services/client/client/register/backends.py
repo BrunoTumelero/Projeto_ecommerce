@@ -20,3 +20,23 @@ class SessionTokenAuthBackend(ModelBackend):
             return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
+
+class ActivationKeyAuthBackend(ModelBackend):
+    """
+        Validate activation_key
+    """
+    def authenticate(self, request=None, activation_key=None, **kwargs):
+        if activation_key:
+            try:
+                return User.objects.get(activation_key=activation_key, is_activated=False)
+            except User.DoesNotExist:
+                return None
+        else:
+            return None
+
+    def get_user(self, user_id):
+        try:
+            return User.objects.get(pk=user_id)
+        except User.DoesNotExist:
+            return None
+        

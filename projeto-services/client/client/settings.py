@@ -57,7 +57,8 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = [
     'client.register.backends.SessionTokenAuthBackend',
-    'django.contrib.auth.backends.ModelBackend' #valida o token no backend
+    'django.contrib.auth.backends.ModelBackend', #valida o token no backend
+    'client.register.backends.ActivationKeyAuthBackend',
 ]
 
 ROOT_URLCONF = 'client.urls'

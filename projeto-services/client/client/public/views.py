@@ -3,8 +3,6 @@ from django.contrib.auth import authenticate
 from django.http import JsonResponse
 
 from .utils import _create_token
-from client.register.models import State, City
-from client.public.decorators import staff_autentication
 
 @csrf_exempt
 def login(request):
