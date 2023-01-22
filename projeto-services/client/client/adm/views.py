@@ -13,19 +13,38 @@ def user_permission(request):
 
     if data['email']:
         try:
-            user = User.object.get(email=data['email'])
+            user = User.objects.get(email=data['email'])
         except User.DoesNotExist:
             return JsonResponse({'message': 'Usuário inválido', 'status': 400})
         if data['is_staff']:
             user.is_staff = True
             user.save()
-            return JsonResponse({'message': 'Acesso staff concedido com sucesso', 'status': 200})
+            return JsonResponse({'message': 'Status staff alterado com sucesso', 'status': 200})
         if data['is_superuser']:
             user.is_superuser = True
             user.save()
-            return JsonResponse({'message': 'Acesso superuser concedido com sucesso', 'status': 200})
+            return JsonResponse({'message': 'Status superuser alterado com sucesso', 'status': 200})
     return JsonResponse({'message': 'Informe o email do usuário', 'status': 400})
 
+@csrf_exempt
+@staff_authenticate
+def remove_permisson(request):
+    data = request.POST.copy()
+
+    if data['email']:
+        try:
+            user = User.objects.get(email=data['email'])
+        except User.DoesNotExist:
+            return JsonResponse({'message': 'Usuário inválido', 'status': 400})
+        if user.is_staff and data['is_staff']:
+            user.is_staff = False
+            user.save()
+            return JsonResponse({'message': 'Status staff alterado com sucesso', 'status': 200})
+        if user.is_superuser and data['is_superuser']:
+            user.is_superuser = False
+            user.save()
+            return JsonResponse({'message': 'Status staff alterado com sucesso', 'status': 200})
+    return JsonResponse({'message': 'Informe o email do usuário', 'status': 400})
 
 @csrf_exempt
 @staff_authenticate
