@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 from .managers import UserManager
 
@@ -19,12 +20,12 @@ class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
                                 related_name='users',
                                 on_delete=models.SET_NULL,
                                 null=True)
-    email = models.EmailField(name="email", unique=True)
-    date_joined = models.DateField(name="date joined", auto_now_add=True)
+    email = models.EmailField(_("email address"), unique=True)
+    date_joined = models.DateField(_("date joined"), auto_now_add=True)
     is_company = models.BooleanField(default=False)
     is_consumer = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(name="superuser", default=False)
-    is_staff = models.BooleanField(name= "staff", default=False)
+    is_superuser = models.BooleanField(_("superuser"), default=False)
+    is_staff = models.BooleanField(_("staff"), default=False)
 
     session_token = models.CharField(max_length=64, blank=True, null=True)
     activation_key = models.CharField(max_length=64)
@@ -34,8 +35,8 @@ class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     class Meta:
-        verbose_name = "user"
-        verbose_name_plural = "users"
+        verbose_name = _("user")
+        verbose_name_plural = _("users")
 
 class UserSession(AbstractBaseModel):
 

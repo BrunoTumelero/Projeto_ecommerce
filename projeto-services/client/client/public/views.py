@@ -22,13 +22,13 @@ def login(request):
                 _type = 'consumer'
             elif user.is_company and not user.is_consumer:
                 _type = 'company'
-            #elif user.is_staff:
-                #_type = 'staff'
+            elif user.is_staff:
+                _type = 'staff'
 
             return JsonResponse({
                 '_id': user.id,
                 '_token': session_token,
-                'type': '_type',
+                'type': _type,
                 'message': 'Login efetuado com sucesso.',
                 'status': 200
             })

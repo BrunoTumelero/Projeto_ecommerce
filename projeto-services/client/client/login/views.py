@@ -5,11 +5,11 @@ from django.contrib.auth import authenticate, login as django_login
 
 
 def login(request):
-    if request.user.is_authrnticated:
-        if request.user.is_candidate:
-            return HttpResponseRedirect(reverse('dashboard:candidate_home'))
+    if request.user.is_authenticated:
+        if request.user.is_consumer:
+            print('consumer')
         if request.user.is_company:
-            return HttpResponseRedirect(reverse('dashboard:company_home'))
+            print('company')
     else:
         if request.method == 'POST':
             return _login_method(request)
@@ -22,9 +22,9 @@ def _login_method(request):
     user = authenticate(username=username, password=password)
     if user is not None:
         django_login(request, user)
-        if request.user.is_candidate:
-            return HttpResponseRedirect(reverse('dashboard:candidate_home'))
+        if request.user.is_consumer:
+            print('consumer')
         if request.user.is_company:
-            return HttpResponseRedirect(reverse('dashboard:company_home'))
+            print('company')
     else:
         return render(request, 'login.html')

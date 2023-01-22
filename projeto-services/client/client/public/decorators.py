@@ -1,16 +1,13 @@
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
 
-def user_authentiate(function):
-    print(111)
+def user_authenticate(function):
+
     def wrap(request, *args, **kwargs):
-        print(*args)
-        print(**kwargs)
-        user = authenticate(session_token=request.POST.get('token', None))
-        print(user)
+        user = authenticate(session_token=request.POST.get('_token', None))
 
         if user is None:
-            return JsonResponse({'message': 'Não autorizado', 'status': 400})
+            return JsonResponse({'message': 'Você precisa estar autenticado.', 'status': 400})
 
         request.user = user
 
@@ -20,7 +17,7 @@ def user_authentiate(function):
     wrap.__name__ = function.__name__
 
     return wrap
-
+    
 def company_autentication(function):
 
     def find_token(request, *args, **kwargs):

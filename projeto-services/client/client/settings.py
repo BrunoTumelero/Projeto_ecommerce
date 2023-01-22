@@ -55,6 +55,11 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'client.register.backends.SessionTokenAuthBackend',
+    'django.contrib.auth.backends.ModelBackend' #valida o token no backend
+]
+
 ROOT_URLCONF = 'client.urls'
 
 AUTH_USER_MODEL = 'register.User'

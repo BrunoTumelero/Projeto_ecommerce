@@ -6,7 +6,7 @@ from django.db import IntegrityError
 from client.register.models import *
 from client.public.utils import _create_token
 from client.company.forms import CompanySpecialtyForm, ProductsForm
-from client.public.decorators import company_autentication, user_authentiate
+from client.public.decorators import company_autentication, user_authenticate
 
 @csrf_exempt
 def create_company(request):
@@ -92,7 +92,7 @@ def create_company(request):
 
 @csrf_exempt
 @company_autentication
-@user_authentiate
+@user_authenticate
 def create_specialty(request):
     data = request.POST.copy()
 
@@ -113,7 +113,7 @@ def create_specialty(request):
     return JsonResponse({'message': 'Erro ao salvar especialidade', 'status': 400})
 
 @csrf_exempt
-@user_authentiate
+@user_authenticate
 @company_autentication
 def create_new_product(request):
     data = request.POST.copy()

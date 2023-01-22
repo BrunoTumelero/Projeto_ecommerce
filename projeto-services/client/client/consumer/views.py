@@ -6,7 +6,7 @@ from django.conf import settings
 from client.register.models import *
 from .utils import _create_token
 from client.consumer.forms import ConsumersCardsForm
-from client.public.decorators import user_authentiate
+from client.public.decorators import user_authenticate
 
 @csrf_exempt
 def create_user(request):
@@ -56,7 +56,7 @@ def create_user(request):
     return JsonResponse({'message': 'Erro ao cadastrar usuário', 'status': 200})
 
 @csrf_exempt
-@user_authentiate
+@user_authenticate
 def add_card(request):
     data = request.POST.copy()
 
@@ -70,6 +70,7 @@ def add_card(request):
         return JsonResponse({'message': 'Erro ao salvar cartão', 'status': 400})
 
 @csrf_exempt
+@user_authenticate
 def test(request):
     print('test')
     return JsonResponse({'message': 'teste realizado com sucesso'})
