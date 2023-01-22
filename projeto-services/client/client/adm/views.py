@@ -91,3 +91,21 @@ def create_city(request):
         print(form.errors)
 
     return JsonResponse({'message': 'Cidade inválida', 'status': 400})
+
+@csrf_exempt
+@staff_authenticate
+def delete_account(request):
+    user_id = request.POST.get('user_id')
+
+    try:
+        user = User.objects.get(pk=user_id)
+    except User.DoesNotExist:
+        return JsonResponse({'message': 'Usuário inválido', 'status': 400})
+
+    #delete permissions
+    user.permisions.all().delete() #related_name
+
+    #delete user
+    user.delete()
+
+    return JsonResponse({'message': 'Usuário deletado com sucesso', 'status': 200})

@@ -168,3 +168,16 @@ class Products(AbstractBaseModel):
     product_categori = models.CharField(max_length=100, null=True, blank=True)
     product_price = models.CharField(max_length=10)
     is_avalable = models.BooleanField()
+
+class Log(AbstractBaseModel):
+    user = models.ForeignKey('register.User', on_delete=models.CASCADE)
+    url = models.CharField(max_length=250, blank=True)
+    authorized = models.BooleanField(default=False)
+
+class Permission(AbstractBaseModel):
+    permission_name = models.CharField(max_length=80)
+    description = models.CharField(max_length=80)
+
+class UserPermission(AbstractBaseModel):
+    user = models.ForeignKey('register.User', on_delete=models.PROTECT, related_name='permissions')
+    permission = models.ForeignKey('register.Permission', on_delete=models.PROTECT, related_name='user_permissions')
