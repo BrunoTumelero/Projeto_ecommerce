@@ -167,7 +167,6 @@ class Products(AbstractBaseModel):
     product_name = models.CharField(max_length=200)
     product_description = models.CharField(max_length=300)
     product_category = models.ForeignKey('register.ProductCategory', on_delete=models.CASCADE, related_name='category_product')
-    product_sub_category = models.ForeignKey('register.SubCategory', on_delete=models.CASCADE, blank=True, null=True, related_name='subcategory_product')
     product_price = models.CharField(max_length=10)
     is_avalable = models.BooleanField(default=False)
 
@@ -183,7 +182,7 @@ class Products(AbstractBaseModel):
 class ProductCategory(AbstractBaseModel):
     category = models.CharField(max_length=50)
     description = models.CharField(max_length=200)
-    sub_category = models.ForeignKey('register.SubCategory', on_delete=models.CASCADE, related_name='ptoductcategory_subcategory')
+    #sub_category = models.ForeignKey('register.SubCategory', on_delete=models.CASCADE, blank=True, null=True, related_name='ptoductcategory_subcategory')
 
     def to_json(self):
         return {
