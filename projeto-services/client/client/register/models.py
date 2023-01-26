@@ -175,6 +175,8 @@ class Products(AbstractBaseModel):
             'id': self.pk,
             'company': self.company.pk,
             'product': self.product_name,
+            'description': self.product_description,
+            'category': self.product_category.pk,
             'price': self.product_price,
             'is_avaliable': self.is_avalable
         }
@@ -235,5 +237,29 @@ class UserCompanyPermission(AbstractBaseModel):
 class purchase(AbstractBaseModel):
     company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='purchase_company')
     consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='purchase_consumer')
-    total = models.FloatField()
+    total = models.CharField(max_length=8)
+
+class shopping_cart(AbstractBaseModel):
+    consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='shopping_consumer')
+    product = models.ForeignKey('register.product', on_delete=models.SET_NULL, related_name='shopping_product')
+    amount = models.CharField(max_length=4)
+    selected = models.BooleanField()
+
+class whishes(AbstractBaseModel):
+    LOW = 'low'
+    MEDIUM = 'medium'
+    HIGTH = 'higth'
+
+    PRIORITY_CHOICES = (
+        (LOW, 'Baixa'),
+        (MEDIUM, 'Média'),
+        (HIGTH, 'Alta'),
+    )
+
+    consumer = models.ForeignKey('register.Consumer', on_delete=models.SET_NULL, related_name='whishes_consumer')
+    product = models.ForeignKey('register.Product', on_delete=models.SET_NULL, related_name='whishes_product')
+    annotation = models.CharField(max_length=200)
+    priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES, default=MEDIUM)
+    amount = models.CharField(max_length=4)
+    
     
