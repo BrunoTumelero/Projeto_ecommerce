@@ -231,4 +231,9 @@ class UserCompanyPermission(AbstractBaseModel):
     level = models.CharField(max_length=6,
                             choices=LEVEL_CHOICES,
                             default=LEVEL_CLERK)
+
+class purchase(AbstractBaseModel):
+    company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='purchase_company')
+    consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='purchase_consumer')
+    total = models.FloatField()
     
