@@ -2,8 +2,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import staff_authenticate
-from client.register.models import State, City, ProductCategory, User, CompanySpecialty
-from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm
+from client.register.models import State, City, ProductCategory, User, CompanySpecialty, SubCategory
+from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm, ProductSubCategoryForm
 
 @csrf_exempt
 @staff_authenticate
@@ -132,9 +132,27 @@ def create_specialty(request):
 
 @csrf_exempt
 @staff_authenticate
+def create_sub_category(request):
+    data = request.POST.copy()
+
+    if data['sub_category']:
+        try:
+            sub_category = SubCategory.objects.get(sub_category=data['sub_category'])
+            form = ProductSubCategoryForm(instance=sub_category, data=data)
+        except SubCategory.DoesNotExist:
+            form = ProductSubCategoryForm(data=data)
+        
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Sub categoria salva com sucesso', 'status': 200})
+        else:
+            print(form.errors)
+    return JsonResponse({'message': 'Erro ao salvar sub categoria', 'error': form.errors, 'status': 404})
+
+@csrf_exempt
+@staff_authenticate
 def create_product_category(request):
     data = request.POST.copy()
-    print(data)
 
     if data['category']:
         try:

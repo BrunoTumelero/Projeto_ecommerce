@@ -107,6 +107,7 @@ def create_new_product(request):
             form.save()
             return JsonResponse({'message': 'Produto adicionado com sucesso', 'status': 200})
         else:
+            print(form.errors)
             return JsonResponse({'message': 'Erro ao salvar o produto', 'error': form.errors, 'status':404})
     
     return JsonResponse({'message': 'Erro ao adicionar o produto', 'status': 400})
