@@ -71,6 +71,18 @@ def add_card(request):
 
 @csrf_exempt
 @user_authenticate
+def get_consumer_product(request):
+    product_id = request.POST.get('product_id', None)
+
+    product = Products.objects.get(pk=product_id)
+
+    return JsonResponse ({
+        'product': product.to_product_json(),
+        'status': 200
+    })
+
+@csrf_exempt
+@user_authenticate
 def test(request):
     print('test')
     return JsonResponse({'message': 'teste realizado com sucesso'})
