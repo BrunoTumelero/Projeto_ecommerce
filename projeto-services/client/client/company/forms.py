@@ -12,7 +12,7 @@ class ShoppingCartForm(forms.ModelForm):
 
     class Meta:
         model = Shopping_Cart
-        fields = ['consumer', ' product', 'amount', 'selected']
+        fields = ['consumer', 'product', 'amount', 'selected']
 
 class WhishesForm(forms.ModelForm):
 

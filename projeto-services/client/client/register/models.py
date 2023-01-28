@@ -236,12 +236,12 @@ class UserCompanyPermission(AbstractBaseModel):
 
 class Purchase(AbstractBaseModel):
     company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='purchase_company')
-    consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='purchase_consumer')
+    consumer = models.ForeignKey('register.Consumers', on_delete=models.CASCADE, related_name='purchase_consumers')
     total = models.CharField(max_length=8)
 
 class Shopping_Cart(AbstractBaseModel):
-    consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='shopping_consumer')
-    product = models.ForeignKey('register.product', on_delete=models.SET_NULL, related_name='shopping_product')
+    consumer = models.ForeignKey('register.Consumers', null=True, on_delete=models.CASCADE, related_name='shopping_consumers')
+    product = models.ForeignKey('register.Products', null=True, on_delete=models.SET_NULL, related_name='shopping_products')
     amount = models.CharField(max_length=4)
     selected = models.BooleanField()
 
@@ -256,8 +256,8 @@ class Whishes(AbstractBaseModel):
         (HIGTH, 'Alta'),
     )
 
-    consumer = models.ForeignKey('register.Consumer', on_delete=models.SET_NULL, related_name='whishes_consumer')
-    product = models.ForeignKey('register.Product', on_delete=models.SET_NULL, related_name='whishes_product')
+    consumer = models.ForeignKey('register.Consumers', null=True, on_delete=models.SET_NULL, related_name='whishes_consumers')
+    product = models.ForeignKey('register.Products', null=True, on_delete=models.SET_NULL, related_name='whishes_products')
     annotation = models.CharField(max_length=200)
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES, default=MEDIUM)
     amount = models.CharField(max_length=4)
