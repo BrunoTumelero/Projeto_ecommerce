@@ -234,18 +234,18 @@ class UserCompanyPermission(AbstractBaseModel):
                             choices=LEVEL_CHOICES,
                             default=LEVEL_CLERK)
 
-class purchase(AbstractBaseModel):
+class Purchase(AbstractBaseModel):
     company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='purchase_company')
     consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='purchase_consumer')
     total = models.CharField(max_length=8)
 
-class shopping_cart(AbstractBaseModel):
+class Shopping_Cart(AbstractBaseModel):
     consumer = models.ForeignKey('register.consumer', on_delete=models.CASCADE, related_name='shopping_consumer')
     product = models.ForeignKey('register.product', on_delete=models.SET_NULL, related_name='shopping_product')
     amount = models.CharField(max_length=4)
     selected = models.BooleanField()
 
-class whishes(AbstractBaseModel):
+class Whishes(AbstractBaseModel):
     LOW = 'low'
     MEDIUM = 'medium'
     HIGTH = 'higth'
