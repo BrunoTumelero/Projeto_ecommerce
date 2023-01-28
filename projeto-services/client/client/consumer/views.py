@@ -83,6 +83,34 @@ def get_consumer_product(request):
 
 @csrf_exempt
 @user_authenticate
+def search_product(request):
+    text = request.POST.get('text', None)
+    type_search = request.POST.get('type_search', None)
+
+    skip = request.POST.get('skip', None)
+    take = request.POST.get('take', None)
+
+    if skip and take:
+        try:
+            skip = int(skip)
+            take = int(take) + skip
+        except ValueError:
+            return JsonResponse({'message': 'Erro de consulta', 'status': 400})
+    else:
+        skip = 0
+        take = 999999999
+
+    if type_search == 'basic':
+        search = Products.objects.filter(product_name__icontains=text)
+        product_card = [product.to_product_json() for product in search]
+
+    return JsonResponse({
+        'product_list': product_card,
+        'status': 200
+    })
+
+@csrf_exempt
+@user_authenticate
 def test(request):
     print('test')
     return JsonResponse({'message': 'teste realizado com sucesso'})
