@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^get_consumer_product$', get_consumer_product, name='get_consumer_product'),
     url(r'^search_product$', search_product, name='search_product'),
     url(r'^add_whishes_list$', add_whishes_list, name='add_whishes_list'),
+    url(r'^add_whishes_list/(?P<pk>\d+)$', add_whishes_list, name='update_whishes_list'),
 
     url(r'^test$', test, name='test'),
 ]
