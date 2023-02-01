@@ -116,21 +116,22 @@ def add_whishes_list(request, pk=None):
 
     if pk:
         list_whishes = Whishes.objects.get(pk=pk)
-        form = WhishesForm(isinstance=list_whishes, data=data)
+        form = WhishesForm(instance=list_whishes, data=data)
 
         if form.is_valid():
             form.save()
-            return JsonResponse({'message': f'Itens adicionados com sucesso na lista: {list_whishes.name_whishe_list}', 'status': 200})
+            return JsonResponse({'message': f'Itens adicionados com sucesso na lista: {list_whishes.name_whishes_list}', 'status': 200})
         else:
-            return JsonResponse({'message': f'Erro ao adicionar itens na lista: {list_whishes.name_whishe_list}', 'status': 400})
+            return JsonResponse({'message': f'Erro ao adicionar itens na lista: {list_whishes.name_whishes_list}', 'status': 400})
     else:
         form = WhishesForm(data=data)
+        name_list = data['name_whishes_list']
 
         if form.is_valid():
             form.save()
-            return JsonResponse({'message': f'Lista: {list_whishes.name_whishe_list} criada com sucesso', 'status': 200})
+            return JsonResponse({'message': f'Lista: {name_list} criada com sucesso', 'status': 200})
         else:
-            return JsonResponse({'message': f'Erro ao criar lista: {list_whishes.name_whishe_list}', 'status': 400})
+            return JsonResponse({'message': f'Erro ao criar lista: {name_list}', 'status': 400})
 
 @csrf_exempt
 @user_authenticate
