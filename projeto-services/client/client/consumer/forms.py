@@ -8,8 +8,8 @@ class ConsumersCardsForm(forms.ModelForm):
         model = ConsumersCards
         fields = ['consumer_name', 'card_number', 'cod_card', 'expiration_date', 'flag_card']
 
-class WhishesForm(forms.models):
+class WhishesForm(forms.ModelForm):
 
     class Meta:
         model = Whishes
-        fields = ['name_whishes_list' 'consumer', 'product', 'annotation', 'priority', 'amount']
+        fields = ['name_whishes_list', 'consumer', 'product', 'annotation', 'priority', 'amount']
