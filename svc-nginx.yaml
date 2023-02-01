@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-nginx
+spec:
+  type: ClusterIP
+  selector:
+    app: nginx-pod
+  ports:
+    - port: 80
+    targetPort: 30801

@@ -256,6 +256,7 @@ class Whishes(AbstractBaseModel):
         (HIGTH, 'Alta'),
     )
 
+    name_whishes_list = models.CharField(max_length=50)
     consumer = models.ForeignKey('register.Consumers', null=True, on_delete=models.SET_NULL, related_name='whishes_consumers')
     product = models.ForeignKey('register.Products', null=True, on_delete=models.SET_NULL, related_name='whishes_products')
     annotation = models.CharField(max_length=200)
