@@ -5,7 +5,7 @@ from django.conf import settings
 
 from client.register.models import *
 from .utils import _create_token
-from client.consumer.forms import ConsumersCardsForm
+from client.consumer.forms import ConsumersCardsForm, WhishesForm
 from client.public.decorators import user_authenticate
 
 @csrf_exempt
@@ -108,6 +108,29 @@ def search_product(request):
         'product_list': product_card,
         'status': 200
     })
+
+@csrf_exempt
+@user_authenticate
+def add_whishes_list(request, pk=None):
+    data = request.POST.copy()
+
+    if pk:
+        list_whishes = Whishes.objects.get(pk=pk)
+        form = WhishesForm(isinstance=list_whishes, data=data)
+
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': f'Itens adicionados com sucesso na lista: {list_whishes.name_whishe_list}', 'status': 200})
+        else:
+            return JsonResponse({'message': f'Erro ao adicionar itens na lista: {list_whishes.name_whishe_list}', 'status': 400})
+    else:
+        form = WhishesForm(data=data)
+
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': f'Lista: {list_whishes.name_whishe_list} criada com sucesso', 'status': 200})
+        else:
+            return JsonResponse({'message': f'Erro ao criar lista: {list_whishes.name_whishe_list}', 'status': 400})
 
 @csrf_exempt
 @user_authenticate

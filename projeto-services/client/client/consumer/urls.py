@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^add_card$', add_card, name='add_card'),
     url(r'^get_consumer_product$', get_consumer_product, name='get_consumer_product'),
     url(r'^search_product$', search_product, name='search_product'),
+    url(r'^add_whishes_list$', add_whishes_list, name='add_whishes_list'),
 
     url(r'^test$', test, name='test'),
 ]

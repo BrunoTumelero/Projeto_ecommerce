@@ -1,0 +1,15 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cliente-deployment
+spec:
+  replicas: 2
+  template:
+    metadata:
+      name: client-pod
+      labels:
+        app: client-pod
+    spec:
+      containers:
+        - name: client-conatiner
+          image: iamfukuma/client-projeto-dev:1
