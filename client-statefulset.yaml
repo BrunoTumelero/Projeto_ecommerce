@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: client-statefulset
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: client-1
+      name: client-1
+    spec:
+      containers:
+        - name: client-container
+          image: iamfukuma/client-projeto-dev:1
+          ports:
+            - containerPort: 8012
+          envFrom:
+            - configMapRef:
+                name: client-configmap
+          VolumeMounts:
+            - name: arq
+              mountPath: /usr/src/
+      volumes:
+        - name: arq
+          persistentVolumeClaim:
+            claimname: arq-pvc
+  selector:
+    matchLabels:
+      app: client-1
+    serviceName: svc-client
