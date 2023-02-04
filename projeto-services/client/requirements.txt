@@ -7,3 +7,4 @@ urllib3==1.26.9
 python-decouple==3.1
 dj-database-url==0.5.0
 python-dotenv==0.20.0
+gerencianet==3.0.0
