@@ -263,4 +263,21 @@ class Whishes(AbstractBaseModel):
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES, default=MEDIUM)
     amount = models.CharField(max_length=4)
     
-    
+class ProductsRating(AbstractBaseModel):
+    VERY_LOW = '1'
+    LOW = '2'
+    NEUTRAL = '3'
+    GOOD = '4'
+    VERY_GOOD = '5'
+
+    RATING_CHOICES = (
+        (VERY_LOW, '1'),
+        (LOW, '2'),
+        (NEUTRAL, '3'),
+        (GOOD, '4'),
+        (VERY_GOOD, '5'),
+    )
+
+    user = models.ForeignKey('register.User', on_delete=models.SET_NULL, null=True, related_name='rating_user')
+    product = models.ForeignKey('register.Products', on_delete=models.SET_NULL, null=True, related_name='rating_product')
+    rating = models.CharField(max_length= 5, choices=RATING_CHOICES)

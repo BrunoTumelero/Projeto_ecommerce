@@ -5,7 +5,7 @@ from django.conf import settings
 
 from client.register.models import *
 from .utils import _create_token
-from client.consumer.forms import ConsumersCardsForm, WhishesForm
+from client.consumer.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
 from client.public.decorators import user_authenticate
 
 @csrf_exempt
@@ -132,6 +132,29 @@ def add_whishes_list(request, pk=None):
             return JsonResponse({'message': f'Lista: {name_list} criada com sucesso', 'status': 200})
         else:
             return JsonResponse({'message': f'Erro ao criar lista: {name_list}', 'status': 400})
+
+@csrf_exempt
+@user_authenticate
+def rating_product(request):
+    user = request.POST.get('user', None)
+    rated_product = request.POST.get('product', None)
+    data = request.POST.copy()
+
+    if user and rated_product:
+        try:
+            rating = ProductsRating.objects.filter(user=user, product=rated_product).first()
+            form = ProductsRatingForm(instance=rating, data=data)
+        except ProductsRating.DoesNotExist:
+            form = ProductsRatingForm(data=data)
+
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Produto avaliado.', 'status': 200})
+        else:
+            print(form.errors)
+            return JsonResponse({'message': 'Erro ao avaliar.', 'status': 400})
+    
+    return JsonResponse({'message': 'Erro.', 'status': 400})
 
 @csrf_exempt
 @user_authenticate
