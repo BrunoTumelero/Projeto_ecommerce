@@ -3,6 +3,8 @@ import time
 import random
 
 from client.register.models import *
+from gerencianet import Gerencianet
+from django.conf import settings
 
 def _create_token(user):
     random.seed()
@@ -13,3 +15,9 @@ def _create_token(user):
     user_session = UserSession(user=user, session_token=session_token)
     user_session.save()
     return session_token
+
+def generate_key_pix():
+    gn = Gerencianet(settings.CREDENCIAIS)
+
+    response =  gn.pix_create_evp()
+    return response

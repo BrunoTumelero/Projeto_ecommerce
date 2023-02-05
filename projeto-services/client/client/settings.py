@@ -130,6 +130,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CREDENCIAIS = {
+        'client_id': config('DEV_CLIENT_KEY'),
+        'client_secret': config('DEV_SECRET_KEY'),
+        'sandbox': True,
+        'certificate': 'client/credinciais/homologacao-436362-Verification-dev.pem'
+    }
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

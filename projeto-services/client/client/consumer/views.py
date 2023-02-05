@@ -4,13 +4,11 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from client.register.models import *
-from .utils import _create_token
+from .utils import _create_token, generate_key_pix
 from client.consumer.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
 from client.public.decorators import user_authenticate
 
-from cieloApi3 import *
-import sys
-import json
+from gerencianet import Gerencianet
 
 @csrf_exempt
 def create_user(request):
@@ -162,56 +160,46 @@ def rating_product(request):
 
 @csrf_exempt
 @user_authenticate
-def card_payment(request):
-    sys.path.insert(0, "./")
-    # Configure o ambiente
-    environment = Environment(sandbox=True)
+def pix_payment(request):
+    purchase_product = request.POST.get('purchase_product', None)
+    value_product = request.POST.get('value_product', None)
+    amount = request.POST.get('amount', None)
 
-    # Configure seu merchant, para gerar acesse: https://cadastrosandbox.cieloecommerce.cielo.com.br/
-    merchant = Merchant(settings.MerchantId, settings.MerchantKey)
+    custumer = Consumers.objects.get(user=request.user)
+    key_pix = generate_key_pix()
+    print(key_pix)
 
-    # Crie uma instância de Sale informando o ID do pagamento
-    sale = Sale('123')
+    gn = Gerencianet(settings.CREDENCIAIS)
 
-    # Crie uma instância de Customer informando o nome do cliente
-    sale.customer = Customer(request.user)
+    params = {
+        'txid': ''
+    }
 
-    # Crie uma instância de Credit Card utilizando os dados de teste
-    # esses dados estão disponíveis no manual de integração
-    credit_card = CreditCard('123', 'Visa')
-    credit_card.expiration_date = '12/2018'
-    credit_card.card_number = '0000000000000001'
-    credit_card.holder = 'Fulano de Tal'
+    body = {
+        'calendario': {
+            'expiracao': 600
+        },
+        'devedor': {
+            'nome': '',
+            'cpf': ''
+        },
+        'valor': {
+            'original': '0.01'
+        },
+        'chave': key_pix,
+        'solicitacaoPagador': None,
+        'infoAdicionais': [
+            {
+                'nome': 'Nome 01',
+                'valor': 'valor 01'
+            }
+        ]
+    }
 
-    # Crie uma instância de Payment informando o valor do pagamento
-    sale.payment = Payment(15700)
-    sale.payment.credit_card = credit_card
-
-    # Cria instância do controlador do ecommerce
-    cielo_ecommerce = CieloEcommerce(merchant, environment)
-
-    # Criar a venda e imprime o retorno
-    response_create_sale = cielo_ecommerce.create_sale(sale)
-    print('----------------------response_create_sale----------------------')
-    print(json.dumps(response_create_sale, indent=2))
-    print('----------------------response_create_sale----------------------')
-
-    # Com a venda criada na Cielo, já temos o ID do pagamento, TID e demais
-    # dados retornados pela Cielo
-    payment_id = sale.payment.payment_id
-
-    # Com o ID do pagamento, podemos fazer sua captura,
-    # se ela não tiver sido capturada ainda
-    response_capture_sale = cielo_ecommerce.capture_sale(payment_id, 15700, 0)
-    print('----------------------response_capture_sale----------------------')
-    print(json.dumps(response_capture_sale, indent=2))
-    print('----------------------response_capture_sale----------------------')
-
-    # E também podemos fazer seu cancelamento, se for o caso
-    response_cancel_sale = cielo_ecommerce.cancel_sale(payment_id, 15700)
-    print('---------------------response_cancel_sale---------------------')
-    print(json.dumps(response_cancel_sale, indent=2))
-    print('---------------------response_cancel_sale---------------------')
+    response =  gn.pix_update_charge(params=params,body=body)
+    return JsonResponse({
+        'response': response
+    })
 
 @csrf_exempt
 @user_authenticate
