@@ -47,6 +47,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -63,6 +64,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 ROOT_URLCONF = 'client.urls'
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = ('content-disposition', 'accept-encoding', 'content-type', 'accept', 'origin', 'authorization',
+                      'cache-control', 'x-requested-with', 'x-fancybox', 'x-frame-options')
 
 AUTH_USER_MODEL = 'register.User'
 
