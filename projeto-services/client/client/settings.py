@@ -26,7 +26,10 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default=['*'], cast=Csv())
-SERVER_URL = config('SERVER_URL', default='http://localhost:8000')
+SERVER_URL = config('SERVER_URL', default='http://localhost:8012')
+DEV_CLIENT_KEY = config('DEV_CLIENT_KEY', default=None)
+DEV_SECRET_KEY = config('DEV_SECRET_KEY', default=None)
+CERT_DEV = config('CERT_DEV', default=None)
 
 # Application definition
 
@@ -139,7 +142,7 @@ CREDENCIAIS = {
         'client_id': config('DEV_CLIENT_KEY'),
         'client_secret': config('DEV_SECRET_KEY'),
         'sandbox': True,
-        'certificate': 'client/credinciais/homologacao-436362-Verification-dev.pem'
+        'certificate': 'client/credinciais/dev.pem'
     }
 
 
