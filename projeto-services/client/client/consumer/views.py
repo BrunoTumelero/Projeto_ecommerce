@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from client.register.models import *
-from .utils import _create_token, generate_key_pix
+from .utils import _create_token, generate_key_pix, token_verification_payment
 from client.consumer.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
 from client.public.decorators import user_authenticate
 
@@ -167,7 +167,7 @@ def pix_payment(request):
 
     custumer = Consumers.objects.get(user=request.user)
     key_pix = generate_key_pix()
-    print(key_pix)
+    token = token_verification_payment()
 
     gn = Gerencianet(settings.CREDENCIAIS)
 
