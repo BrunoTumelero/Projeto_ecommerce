@@ -31,6 +31,7 @@ SERVER_URL = config('SERVER_URL', default='http://localhost:8000')
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
