@@ -4,9 +4,10 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from client.register.models import *
-from .utils import _create_token, generate_key_pix, get_token_api_payment, _headers
-from client.consumer.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
-from client.public.decorators import user_authenticate
+from .utils import _create_token
+from client.payment_api.utils import generate_key_pix, _headers
+from client.consumer_api.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
+from client.public_api.decorators import user_authenticate
 
 from gerencianet import Gerencianet
 import json
@@ -163,11 +164,6 @@ def rating_product(request):
 @csrf_exempt
 @user_authenticate
 def pix_payment(request):
-    print('start')
-    key_pix = generate_key_pix()
-    #token = get_token_api_payment()
-
-    gn = Gerencianet(settings.CREDENCIAIS)
 
     url = "https://api-pix-h.gerencianet.com.br/v2/cob"
 
@@ -186,12 +182,12 @@ def pix_payment(request):
         "solicitacaoPagador": "Informe o número ou identificador do pedido."
         })
     headers = _headers()
-    certificado = f'client/credinciais/{settings.CERT_DEV}'
+    certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
 
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
 
     return JsonResponse({
-        'response': response.text
+        'response': response.json()
     })
 
 @csrf_exempt
