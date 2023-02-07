@@ -18,13 +18,7 @@ def _create_token(user):
     user_session.save()
     return session_token
 
-def generate_key_pix():
-    gn = Gerencianet(settings.CREDENCIAIS)
-
-    response =  gn.pix_create_evp()
-    return response
-
-def token_verification_payment():
+def get_token_api_payment():
     credentials = {
     "client_id": settings.DEV_CLIENT_KEY,
     "client_secret": settings.DEV_SECRET_KEY,
@@ -49,5 +43,36 @@ def token_verification_payment():
                                 headers=headers,
                                 data=payload,
                                 cert=certificado)
+    access = response.json()
+
+    return access['access_token']
+
+def _headers():
+    heraders = {
+        'Authorization': f'Bearer {get_token_api_payment()}',
+        'Content-Type': 'application/json'
+    }
+    return heraders
+
+def generate_key_pix():
+    print('Gerando chave...')
+    credenciais = {
+            'client_id': 'Client_Id_ec3f3b7a718656f4cafe2d66a65e096558520d27',
+            'client_secret': 'Client_Secret_2f025a925ade7cf5bde4afc878fb692fd26134f8',
+            'sandbox': True,
+            'certificate': 'Projeto_dev\projeto-services\client\client\credinciais\dev.pem'
+        }
+
+    url = "https://api-pix-h.gerencianet.com.br/v2/gn/evp"
+    certificado = f'client/credinciais/{settings.CERT_DEV}'
+
+    payload={}
+    headers = {
+        'authorization': f'Bearer {get_token_api_payment()}',
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
+    print(response.json())
 
     return response.text
+

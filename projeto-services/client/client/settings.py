@@ -30,6 +30,7 @@ SERVER_URL = config('SERVER_URL', default='http://localhost:8012')
 DEV_CLIENT_KEY = config('DEV_CLIENT_KEY', default=None)
 DEV_SECRET_KEY = config('DEV_SECRET_KEY', default=None)
 CERT_DEV = config('CERT_DEV', default=None)
+GN_BASE_URL = config('GN_BASE_URL', default=None)
 
 # Application definition
 
