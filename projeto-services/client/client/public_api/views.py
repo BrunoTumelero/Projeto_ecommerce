@@ -15,7 +15,7 @@ def login(request):
     if user_email and password:
         user = authenticate(username=user_email, password=password, email=user_email)
         if user is not None:
-            session_token = _create_token(user)
+
             if user.is_consumer and user.is_company:
                 _type = 'consumer_company'
             elif user.is_consumer and not user.is_company:
@@ -25,17 +25,22 @@ def login(request):
             elif user.is_staff:
                 _type = 'staff'
 
-            return JsonResponse({
-                '_id': user.id,
-                '_token': session_token,
-                'type': _type,
-                'message': 'Login efetuado com sucesso.',
-                'status': 200
-            })
+            if _type == type_user:
+                session_token = _create_token(user)
+                return JsonResponse({
+                    '_id': user.id,
+                    '_token': session_token,
+                    'type': _type,
+                    'message': 'Login efetuado com sucesso.',
+                    'status': 200
+                })
+            else: 
+                return JsonResponse({'message':'Usuário ou senha inválidos.', 'status': 400})
+
         else:
-            return JsonResponse({'message':'Usuário ou senha inválido.', 'status': 400})
+            return JsonResponse({'message':'Usuário ou senha inválidos.', 'status': 400})
     else:
-        return JsonResponse({'message':'Usuário ou senha inválido.', 'status': 400})
+        return JsonResponse({'message':'Usuário ou senha inválidos.', 'status': 400})
 
 @csrf_exempt
 @user_authenticate
