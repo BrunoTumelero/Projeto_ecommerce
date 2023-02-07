@@ -4,11 +4,13 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from client.register.models import *
-from .utils import _create_token, generate_key_pix, token_verification_payment
+from .utils import _create_token, generate_key_pix, get_token_api_payment, _headers
 from client.consumer.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
 from client.public.decorators import user_authenticate
 
 from gerencianet import Gerencianet
+import json
+import requests
 
 @csrf_exempt
 def create_user(request):
@@ -161,44 +163,35 @@ def rating_product(request):
 @csrf_exempt
 @user_authenticate
 def pix_payment(request):
-    purchase_product = request.POST.get('purchase_product', None)
-    value_product = request.POST.get('value_product', None)
-    amount = request.POST.get('amount', None)
-
-    custumer = Consumers.objects.get(user=request.user)
+    print('start')
     key_pix = generate_key_pix()
-    token = token_verification_payment()
+    #token = get_token_api_payment()
 
     gn = Gerencianet(settings.CREDENCIAIS)
 
-    params = {
-        'txid': ''
-    }
+    url = "https://api-pix-h.gerencianet.com.br/v2/cob"
 
-    body = {
-        'calendario': {
-            'expiracao': 600
+    payload = json.dumps({
+        "calendario": {
+            "expiracao": 3600
         },
-        'devedor': {
-            'nome': '',
-            'cpf': ''
+        "devedor": {
+            "cpf": "12345678909",
+            "nome": "Francisco da Silva"
         },
-        'valor': {
-            'original': '0.01'
+        "valor": {
+            "original": "124.45"
         },
-        'chave': key_pix,
-        'solicitacaoPagador': None,
-        'infoAdicionais': [
-            {
-                'nome': 'Nome 01',
-                'valor': 'valor 01'
-            }
-        ]
-    }
+        "chave": "03659197050",
+        "solicitacaoPagador": "Informe o número ou identificador do pedido."
+        })
+    headers = _headers()
+    certificado = f'client/credinciais/{settings.CERT_DEV}'
 
-    response =  gn.pix_update_charge(params=params,body=body)
+    response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
+
     return JsonResponse({
-        'response': response
+        'response': response.text
     })
 
 @csrf_exempt

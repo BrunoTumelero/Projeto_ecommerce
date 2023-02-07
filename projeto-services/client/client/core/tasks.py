@@ -1,30 +1,26 @@
-
+from gerencianet import Gerencianet
 from django.conf import settings
 import requests
 import base64
 
-client_id = 'Client_Id_ec3f3b7a718656f4cafe2d66a65e096558520d27'#settings.DEV_CLIENT_KEY,
-client_secret = 'Client_Secret_2f025a925ade7cf5bde4afc878fb692fd26134f8' #settings.DEV_SECRET_KEY
+def generate_key_pix():
+    credenciais = {
+            'client_id': 'Client_Id_ec3f3b7a718656f4cafe2d66a65e096558520d27',
+            'client_secret': 'Client_Secret_2f025a925ade7cf5bde4afc878fb692fd26134f8',
+            'sandbox': True,
+            'certificate': 'Projeto_dev\projeto-services\client\client\credinciais\dev.pem'
+        }
 
+    url = "https://api-pix-h.gerencianet.com.br/v2/gn/evp"
 
-certificado = 'C:\Users\Bruno\Documents\Aulas\Projeto_complete\Projeto_dev\projeto-services\client\client\credinciais\dev.pem'
+    payload={}
+    headers = {
+        'authorization': f'Bearer {get_token_api_payment()}',
+        'x-client-cert-pem': 'Projeto_dev\projeto-services\client\client\credinciais\dev.pem'
+    }
 
-auth = base64.b64encode(
-    (f"{client_id}:{client_secret}"
-     ).encode()).decode()
+    response = requests.request("POST", url, headers=headers, data=payload)
 
-url = "https://api-pix-h.gerencianet.com.br/oauth/token"  #Para ambiente de Desenvolvimento
+    return response.text
 
-payload="{\r\n    \"grant_type\": \"client_credentials\"\r\n}"
-headers = {
-    'Authorization': f"Basic {auth}",
-    'Content-Type': 'application/json'
-}
-
-response = requests.request("POST",
-                            url,
-                            headers=headers,
-                            data=payload,
-                            cert=certificado)
-
-print(response.text)
+generate_key_pix()
