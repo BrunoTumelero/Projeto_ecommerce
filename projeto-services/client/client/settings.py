@@ -31,6 +31,7 @@ DEV_CLIENT_KEY = config('DEV_CLIENT_KEY', default=None)
 DEV_SECRET_KEY = config('DEV_SECRET_KEY', default=None)
 CERT_DEV = config('CERT_DEV', default=None)
 GN_BASE_URL = config('GN_BASE_URL', default=None)
+PATH_CREDENTIALS = config('PATH_CREDENTIALS', default=None)
 
 # Application definition
 
@@ -44,10 +45,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'client.register',
-    'client.login',
-    'client.consumer',
-    'client.public',
-    'client.company',
+    'client.consumer_api',
+    'client.public_api',
+    'client.company_api',
+    'client.payment_api'
 ]
 
 MIDDLEWARE = [

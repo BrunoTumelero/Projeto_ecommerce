@@ -1,22 +1,10 @@
-import hashlib
-import time
-import random
 import requests
 import base64
+import json
 
-from client.register.models import *
 from gerencianet import Gerencianet
 from django.conf import settings
 
-def _create_token(user):
-    random.seed()
-    cod = hashlib.md5()
-    cod.update((str(random.randint(0, 100000000000)) +
-                str(time.time())).encode("utf-8"))
-    session_token = cod.hexdigest()
-    user_session = UserSession(user=user, session_token=session_token)
-    user_session.save()
-    return session_token
 
 def get_token_api_payment():
     credentials = {
@@ -24,8 +12,8 @@ def get_token_api_payment():
     "client_secret": settings.DEV_SECRET_KEY,
 }
 
-    certificado = f'client/credinciais/{settings.CERT_DEV}'  # A variável certificado é o diretório em que seu certificado em formato .pem deve ser inserido
-
+    certificado = f'credentials/{settings.CERT_DEV}'  # A variável certificado é o diretório em que seu certificado em formato .pem deve ser inserido
+    print(certificado)
     auth = base64.b64encode(
         (f"{credentials['client_id']}:{credentials['client_secret']}"
         ).encode()).decode()
@@ -45,6 +33,10 @@ def get_token_api_payment():
                                 cert=certificado)
     access = response.json()
 
+    created_token = open(settings.PATH_CREDENTIALS, 'access.json', 'w')
+    json.dump(access, created_token, indent=2)
+    created_token.close()
+
     return access['access_token']
 
 def _headers():
@@ -57,16 +49,16 @@ def _headers():
 def generate_key_pix():
     print('Gerando chave...')
 
+    certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
+
     url = "https://api-pix-h.gerencianet.com.br/v2/gn/evp"
-    certificado = f'client/credinciais/{settings.CERT_DEV}'
 
     payload={}
     headers = {
         'authorization': f'Bearer {get_token_api_payment()}',
         'Content-Type': 'application/json'
     }
+
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
-    print(response.json())
 
     return response.text
-

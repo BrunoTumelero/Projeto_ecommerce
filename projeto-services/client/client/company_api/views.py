@@ -4,9 +4,9 @@ from django.conf import settings
 from django.db import IntegrityError
 
 from client.register.models import *
-from client.public.utils import _create_token
-from client.company.forms import ProductsForm
-from client.public.decorators import company_autentication, user_authenticate
+from client.public_api.utils import _create_token
+from client.company_api.forms import ProductsForm
+from client.public_api.decorators import company_autentication, user_authenticate
 
 @csrf_exempt
 def create_company(request):
