@@ -36,31 +36,31 @@ def create_user(request):
             if type_user == 'consumer':
                 try:
                     user = User.objects.create(email=user_email)
+                    user.email = user_email
+                    user.set_password(password)
+                    user.is_active = True
+                    user.is_consumer = True
+                    session_token = _create_token(user)
+                    user.save()
+                    consumer, _ = Consumers.objects.get_or_create(user=user)
+                    consumer.full_name = full_name
+                    consumer.whatsapp = phone
+                    consumer.cpf = cpf
+                    consumer.save()
+
+                    return JsonResponse({'message': 'Usuário cadastrado com sucesso', 'id': user.id, 'token': session_token, 'status': 200})
                 except IntegrityError:
                     #email duplicate
                     return JsonResponse({'message': 'Emais já cadastrado', 'status': 400})
 
-        if type_user == 'company':
-            return JsonResponse({'message': 'Cadastro para usuários', 'status': 400})
+            if type_user == 'company':
+                return JsonResponse({'message': 'Cadastro para usuários', 'status': 400})
         
-        if type_user == 'consumer':
-            user.email = user_email
-            user.set_password(password)
-            user.is_active = True
-            user.is_consumer = True
-            session_token = _create_token(user)
-            user.save()
-            consumer, _ = Consumers.objects.get_or_create(user=user)
-            consumer.full_name = full_name
-            consumer.whatsapp = phone
-            consumer.cpf = cpf
-            consumer.save()
+            else:
+                return JsonResponse({'message': 'Tipo inválido', 'status': 400})
 
-            return JsonResponse({'message': 'Usuário cadastrado com sucesso', 'id': user.id, 'token': session_token, 'status': 200})
-        else:
-            return JsonResponse({'message': 'Tipo inválido', 'status': 400})
-
-    return JsonResponse({'message': 'Erro ao cadastrar usuário', 'status': 200})
+        return JsonResponse({'message': 'Erro ao cadastrar usuário', 'status': 400})
+    return JsonResponse({'message': 'Informe os campos obrigatórios', 'status': 400})
 
 @csrf_exempt
 @user_authenticate
