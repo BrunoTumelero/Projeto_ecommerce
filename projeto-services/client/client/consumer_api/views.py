@@ -33,14 +33,14 @@ def create_user(request):
                 return JsonResponse({'message': 'Email já cadastrado', 'status': 400})
         else:
             #create user
-            try:
-                user = User.objects.create(email=user_email)
-            except IntegrityError:
-                #email duplicate
-                return JsonResponse({'message': 'Emais já cadastrado', 'status': 400})
+            if type_user == 'consumer':
+                try:
+                    user = User.objects.create(email=user_email)
+                except IntegrityError:
+                    #email duplicate
+                    return JsonResponse({'message': 'Emais já cadastrado', 'status': 400})
 
         if type_user == 'company':
-            
             return JsonResponse({'message': 'Cadastro para usuários', 'status': 400})
         
         if type_user == 'consumer':
@@ -57,6 +57,8 @@ def create_user(request):
             consumer.save()
 
             return JsonResponse({'message': 'Usuário cadastrado com sucesso', 'id': user.id, 'token': session_token, 'status': 200})
+        else:
+            return JsonResponse({'message': 'Tipo inválido', 'status': 400})
 
     return JsonResponse({'message': 'Erro ao cadastrar usuário', 'status': 200})
 
