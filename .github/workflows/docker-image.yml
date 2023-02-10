@@ -15,8 +15,5 @@ jobs:
       - uses: actions/checkout@v3
       
       - name: Build the Docker image
-        with:
-          context: Projeto_dev/
-          file: docker-compose.yml
-          run: docker-compose --version -f docker-compose.yml up -d --build
+        run: docker-compose --version -f docker-compose.yml up -d --build
         
