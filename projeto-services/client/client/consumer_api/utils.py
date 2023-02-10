@@ -13,3 +13,6 @@ def _create_token(user):
     user_session = UserSession(user=user, session_token=session_token)
     user_session.save()
     return session_token
+
+def _create_activation_token():
+    return str(random.randint(100000, 999999))

@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.conf import settings
 
 from client.register.models import *
-from .utils import _create_token
+from .utils import _create_token, _create_activation_token
 from client.payment_api.utils import generate_key_pix, _headers
 from client.consumer_api.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
 from client.public_api.decorators import user_authenticate
@@ -40,6 +40,7 @@ def create_user(request):
                     user.set_password(password)
                     user.is_active = True
                     user.is_consumer = True
+                    user.activation_token = _create_activation_token()
                     session_token = _create_token(user)
                     user.save()
                     consumer, _ = Consumers.objects.get_or_create(user=user)
@@ -61,6 +62,22 @@ def create_user(request):
 
         return JsonResponse({'message': 'Erro ao cadastrar usuário', 'status': 400})
     return JsonResponse({'message': 'Informe os campos obrigatórios', 'status': 400})
+
+@csrf_exempt
+@user_authenticate
+def change_password(request):
+    user_email = request.POST.get('user_email', None)
+    old_password = request.POST.get('old_password', None)
+    new_password = request.POST.get('new_password', None)
+
+    if User.objects.get(email=user_email).exists():
+        user = User.objects.get(email=user_email)
+        if user.password == old_password:
+            user.password == new_password
+            user.save()
+        return JsonResponse({'message': 'Senha trocada com sucesso', 'status': 200})
+    else:
+        return JsonResponse({'message': 'Erro', 'status': 400})
 
 @csrf_exempt
 @user_authenticate
