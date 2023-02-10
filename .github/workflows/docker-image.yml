@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
+      
       - name: Build the Docker image
-        run: docker-compose --version -f docker-compose.yml up -d --build
+        with:
+          context: Projeto_dev/
+          file: docker-compose.yml
+          run: docker-compose --version -f docker-compose.yml up -d --build
+        
