@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'^add_whishes_list/(?P<pk>\d+)$', add_whishes_list, name='update_whishes_list'),
     url(r'^rating_product$', rating_product, name='rating_product'),
     url(r'^add_product_shoping_cart$', add_product_shoping_cart, name='add_product_shoping_cart'),
+    url(r'^remove_item_shopping_cart$', remove_item_shopping_cart, name='remove_item_shopping_cart'),
 
     url(r'^test$', test, name='test'),
 ]
