@@ -167,7 +167,7 @@ class Products(AbstractBaseModel):
     product_name = models.CharField(max_length=200)
     product_description = models.CharField(max_length=300)
     product_category = models.ForeignKey('register.ProductCategory', on_delete=models.CASCADE, related_name='category_product')
-    product_price = models.CharField(max_length=10)
+    product_price = models.DecimalField(max_digits=8, decimal_places=2)
     is_avalable = models.BooleanField(default=False)
 
     def to_product_json(self):
@@ -240,9 +240,15 @@ class Purchase(AbstractBaseModel):
     total = models.CharField(max_length=8)
 
 class Shopping_Cart(AbstractBaseModel):
+    @property
+    def total(self):
+        if self.selected:
+            new_amount = self.amount * self.product.product_price
+        return new_amount
+
     consumer = models.ForeignKey('register.Consumers', null=True, on_delete=models.CASCADE, related_name='shopping_consumers')
     product = models.ForeignKey('register.Products', null=True, on_delete=models.SET_NULL, related_name='shopping_products')
-    amount = models.CharField(max_length=4)
+    amount = models.IntegerField()
     selected = models.BooleanField()
 
 class Whishes(AbstractBaseModel):

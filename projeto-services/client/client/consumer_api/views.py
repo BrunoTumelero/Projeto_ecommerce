@@ -1,12 +1,13 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from django.db import IntegrityError
+from django.db.models import Q
 from django.conf import settings
 
 from client.register.models import *
 from .utils import _create_token, _create_activation_token
 from client.payment_api.utils import generate_key_pix, _headers
-from client.consumer_api.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm
+from client.consumer_api.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm, ShoppingCartForm
 from client.public_api.decorators import user_authenticate
 
 from gerencianet import Gerencianet
@@ -182,32 +183,35 @@ def rating_product(request):
 
 @csrf_exempt
 @user_authenticate
-def pix_payment(request):
+def add_product_shoping_cart(request):
+    amount = request.POST.get('amount', None)
+    data = request.POST.copy()
 
-    url = "https://api-pix-h.gerencianet.com.br/v2/cob"
+    if Shopping_Cart.objects.filter(product=data['product'], consumer=data['consumer']).exists():
+        old_amount = Shopping_Cart.objects.get(product=data['product'], consumer=request.user.pk)
+        data['amount'] = old_amount.amount + int(amount)
+        try:
+            cart = Shopping_Cart.objects.filter(product=data['product'], consumer=data['consumer']).first()
+            form = ShoppingCartForm(instance=cart, data=data)
+        except Shopping_Cart.DoesNotExist:
+            form = ShoppingCartForm(data=data)
 
-    payload = json.dumps({
-        "calendario": {
-            "expiracao": 3600
-        },
-        "devedor": {
-            "cpf": "12345678909",
-            "nome": "Francisco da Silva"
-        },
-        "valor": {
-            "original": "124.45"
-        },
-        "chave": "03659197050",
-        "solicitacaoPagador": "Informe o número ou identificador do pedido."
-        })
-    headers = _headers()
-    certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Produto adicionado ao carrinho', 'status': 200})
+        else:
+            print(form.errors)
+            return JsonResponse({'message': 'Erro form', 'status': 404})
+    else:
+        form = ShoppingCartForm(data=data)
 
-    response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
-
-    return JsonResponse({
-        'response': response.json()
-    })
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Produto adicionado ao carrinho', 'status': 200})
+        else:
+            print(form.errors)
+            return JsonResponse({'message': 'Erro form', 'status': 404})
+    return JsonResponse({'message': 'Erro', 'status': 400}) 
 
 @csrf_exempt
 @user_authenticate
