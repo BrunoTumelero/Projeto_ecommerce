@@ -246,6 +246,11 @@ class Shopping_Cart(AbstractBaseModel):
             new_amount = self.amount * self.product.product_price
         return new_amount
 
+    @property
+    def remove_item(self):
+        amount_item = self.amount - 1
+        return amount_item
+
     consumer = models.ForeignKey('register.Consumers', null=True, on_delete=models.CASCADE, related_name='shopping_consumers')
     product = models.ForeignKey('register.Products', null=True, on_delete=models.SET_NULL, related_name='shopping_products')
     amount = models.IntegerField()
