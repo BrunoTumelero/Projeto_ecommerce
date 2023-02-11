@@ -216,13 +216,17 @@ def add_product_shoping_cart(request):
 def remove_item_shopping_cart(request):
     new_amount = request.POST.get('amount', 1)
     product_id = request.POST.get('product', None)
+    product_selected = request.POST.get('selected', None)
     
     if product_id:
         cart = Shopping_Cart.objects.get(product=product_id, consumer=request.user.pk)
-        print(cart.remove_item)
         cart.amount = cart.remove_item
         cart.save()
         return JsonResponse({'message': 'Item removido', 'status': 200})
+    if product_selected == 'False' or 'false':
+        cart = Shopping_Cart.objects.get(product=product_id, consumer=request.user.pk)
+        cart.selected = False
+        cart.save()
 
     return JsonResponse({'message': 'Item não encontrado', 'status': 400})
 
