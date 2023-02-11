@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^add_whishes_list$', add_whishes_list, name='add_whishes_list'),
     url(r'^add_whishes_list/(?P<pk>\d+)$', add_whishes_list, name='update_whishes_list'),
     url(r'^rating_product$', rating_product, name='rating_product'),
-     url(r'^pix_payment$', pix_payment, name='pix_payment'),
+    url(r'^add_product_shoping_cart$', add_product_shoping_cart, name='add_product_shoping_cart'),
 
     url(r'^test$', test, name='test'),
 ]

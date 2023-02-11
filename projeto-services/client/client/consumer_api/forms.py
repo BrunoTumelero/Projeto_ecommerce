@@ -1,6 +1,6 @@
 from django import forms
 
-from client.register.models import ConsumersCards, Whishes, ProductsRating
+from client.register.models import ConsumersCards, Whishes, ProductsRating, Shopping_Cart
 
 class ConsumersCardsForm(forms.ModelForm):
 
@@ -19,3 +19,9 @@ class ProductsRatingForm(forms.ModelForm):
     class Meta:
         model = ProductsRating
         fields = ['user', 'product', 'rating']
+
+class ShoppingCartForm(forms.ModelForm):
+
+    class Meta:
+        model = Shopping_Cart
+        fields = ['product', 'consumer', 'amount', 'selected']
