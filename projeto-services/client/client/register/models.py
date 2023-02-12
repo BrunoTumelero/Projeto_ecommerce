@@ -61,6 +61,7 @@ class Consumers(AbstractBaseModel):
                                 related_name='consumer_name')
 
     full_name = models.CharField(max_length=250, null=False, blank=False)
+    picture_url = models.CharField(max_length=200, null=True, blank=True)
     cpf = models.CharField(max_length=15)
     alias = models.CharField(max_length=200, blank=True)
     whatsapp = models.CharField(max_length=15)

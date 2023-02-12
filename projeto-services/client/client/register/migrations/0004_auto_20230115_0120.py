@@ -19,6 +19,7 @@ class Migration(migrations.Migration):
                 ('updated_at', models.DateTimeField(auto_now=True)),
                 ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('full_name', models.CharField(max_length=250)),
+                ('picture_url', models.CharField(max_length=200)),
                 ('cpf', models.CharField(max_length=15)),
                 ('alias', models.CharField(blank=True, max_length=200)),
                 ('whatsapp', models.CharField(max_length=15)),
