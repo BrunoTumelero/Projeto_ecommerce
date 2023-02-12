@@ -1,12 +1,13 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
 from django.http import JsonResponse
+from django.utils import timezone
 
 import requests
 import base64
 import json
 
-from client.public_api.decorators import user_authenticate
+from client.public_api.decorators import user_authenticate, company_autentication
 from .utils import _headers, get_token_api_payment
 from client.register.models import Shopping_Cart
 
@@ -49,3 +50,88 @@ def pix_payment(request):
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
 
     return JsonResponse({'message': response.json()})
+
+@csrf_exempt
+@user_authenticate
+@company_autentication
+def get_bilings(request):
+    start_date = request.POST.get('start_date', None) #timezone
+    end_date = request.POST.get('end_date', None)
+    cpf = request.POST.get('cpf', None)
+    cnpj = request.POST.get('cnpj', None)
+    status = request.POST.get('status', None)
+    pag = request.POST.get('pag', 0)
+    items_pag = request.POST.get('items_pag', 20)
+
+    headers = _headers()
+    certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
+    
+    if start_date and end_date:
+        start_date += 'T00:00:00Z'
+        end_date += 'T00:00:00Z'
+    else:
+        return JsonResponse({'message': 'Informe a data', 'status': 404})
+
+    if start_date and end_date:
+        url = f'{settings.GN_BASE_URL}/v2/cob?inicio={start_date}&fim={end_date}'
+    if cpf:
+        url += f'&cpf={cpf}'
+    if cnpj:
+        url += f'&cnpj={cnpj}'
+    if status:
+        url += f'&status={status.upper()}'
+    if pag:
+        url += f'&paginacao.paginaAtual={pag}'
+    if items_pag:
+        url += f'&paginacao.itensPorPagina={pag}'
+
+    payload = {}
+    
+    response = requests.request("GET", url, headers=headers, data=payload, cert=certificado)
+
+    return JsonResponse({
+        'message': response.json(),
+        'status': 200
+    })
+
+@csrf_exempt
+@user_authenticate
+@company_autentication
+def pix_revision(request):
+    txid = request.POST.get('txid', None)
+
+    headers = _headers()
+    certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
+
+    if txid:
+        url = f'{settings.GN_BASE_URL}/v2/cob/:{txid}'
+    else:
+        return JsonResponse({'message': 'Informe o localizador da cobrança', 'status': 404})
+
+    payload = json.dumps({
+            "calendario": {
+                "expiracao": 600
+            },
+            "devedor": {
+                "nome": "Fukuma",
+                "cpf": "70921227086"
+            },
+            "valor": {
+                "original": "3000.00"
+            },
+            "chave": "03659197050",
+            "solicitacaoPagador": "Informe o número ou identificador do pedido.",
+            "infoAdicionais": [
+                {
+                "nome": "Campo 1",
+                "valor": "valor 1"
+                }
+            ]
+            })
+
+    response = requests.request("PATCH", url, headers=headers, data=payload, cert=certificado)
+
+    return JsonResponse({
+        'response': response.json(),
+        'status': 200
+    })

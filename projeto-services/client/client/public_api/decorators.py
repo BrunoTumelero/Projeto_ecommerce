@@ -25,16 +25,16 @@ def company_autentication(function):
         Validation of company
     """
 
-    def find_token(request, *args, **kwargs):
+    def wrap(request, *args, **kwargs):
         if hasattr(request, 'user') and not request.user.is_company:
-            return JsonResponse({'menssage': 'Empresa autorizado', 'status': 403})
+            return JsonResponse({'message': 'Você não tem permissão.', 'status': 403})
 
         return function(request, *args, **kwargs)
 
-    find_token.__doc__ = function.__doc__
-    find_token.__name__ = function.__name__
+    wrap.__doc__ = function.__doc__
+    wrap.__name__ = function.__name__
 
-    return find_token
+    return wrap
 
 def staff_autentication(codename):
     """
