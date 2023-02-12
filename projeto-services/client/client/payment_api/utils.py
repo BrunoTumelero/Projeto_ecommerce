@@ -12,8 +12,8 @@ def get_token_api_payment():
     "client_secret": settings.DEV_SECRET_KEY,
 }
 
-    certificado = f'credentials/{settings.CERT_DEV}'  # A variável certificado é o diretório em que seu certificado em formato .pem deve ser inserido
-    print(certificado)
+    certificado = f'client/payment_api/certificates/{settings.CERT_DEV}'  # A variável certificado é o diretório em que seu certificado em formato .pem deve ser inserido
+    
     auth = base64.b64encode(
         (f"{credentials['client_id']}:{credentials['client_secret']}"
         ).encode()).decode()
@@ -32,10 +32,6 @@ def get_token_api_payment():
                                 data=payload,
                                 cert=certificado)
     access = response.json()
-
-    created_token = open(settings.PATH_CREDENTIALS, 'access.json', 'w')
-    json.dump(access, created_token, indent=2)
-    created_token.close()
 
     return access['access_token']
 

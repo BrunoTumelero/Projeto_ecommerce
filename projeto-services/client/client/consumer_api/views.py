@@ -211,20 +211,23 @@ def add_product_shoping_cart(request):
         else:
             print(form.errors)
             return JsonResponse({'message': 'Erro form', 'status': 404})
+            
 @csrf_exempt
 @user_authenticate
 def remove_item_shopping_cart(request):
-    new_amount = request.POST.get('amount', 1)
     product_id = request.POST.get('product', None)
     product_selected = request.POST.get('selected', None)
+
+    try:
+        cart = Shopping_Cart.objects.get(product=product_id, consumer=request.user.pk)
+    except Shopping_Cart.DoesNotExist:
+        return JsonResponse({'message': 'Item não encontrado', 'status': 400})
     
     if product_id:
-        cart = Shopping_Cart.objects.get(product=product_id, consumer=request.user.pk)
         cart.amount = cart.remove_item
         cart.save()
         return JsonResponse({'message': 'Item removido', 'status': 200})
     if product_selected == 'False' or 'false':
-        cart = Shopping_Cart.objects.get(product=product_id, consumer=request.user.pk)
         cart.selected = False
         cart.save()
 
