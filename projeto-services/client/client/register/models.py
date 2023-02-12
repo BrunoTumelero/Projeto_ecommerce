@@ -244,7 +244,9 @@ class Shopping_Cart(AbstractBaseModel):
     def total(self):
         if self.selected:
             new_amount = self.amount * self.product.product_price
-        return new_amount
+            return new_amount
+        else:
+            return 0
 
     @property
     def remove_item(self):
