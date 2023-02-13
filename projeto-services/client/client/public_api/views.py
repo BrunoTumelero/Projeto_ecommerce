@@ -20,22 +20,26 @@ def login(request):
                 _type = 'consumer_company'
             elif user.is_consumer and not user.is_company:
                 _type = 'consumer'
+                full_name = user.consumer_name.full_name
+                picture_url = user.consumer_name.picture_url
             elif user.is_company and not user.is_consumer:
                 _type = 'company'
+                full_name = user.company_name.public_name
+                picture_url = user.company_name.picture_url
             elif user.is_staff:
                 _type = 'staff'
+            else:
+                _type = ''
 
             if _type == type_user:
                 session_token = _create_token(user)
-
-                consumer =  Consumers.objects.get(user_id = user.id)
 
                 return JsonResponse({
                     '_id': user.id,
                     '_token': session_token,
                     'type': _type,
-                    'full_name': consumer.full_name,
-                    'picture_url': consumer.picture_url,
+                    'full_name': full_name,
+                    'picture_url': picture_url,
                     'message': 'Login efetuado com sucesso.',
                     'status': 200
                 })

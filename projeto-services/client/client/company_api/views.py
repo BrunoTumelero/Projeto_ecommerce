@@ -80,13 +80,6 @@ def create_company(request):
 
             except User.MultipleObjectsReturned:
                 return JsonResponse({'message': 'Email já cadastrado', 'status': 400})
-        else:
-            #create user
-            try:
-                user = User.objects.create(email=email_owner)
-            except IntegrityError:
-                #email duplicate
-                return JsonResponse({'message': 'Emais já cadastrado', 'status': 400})
 
     return JsonResponse({'message': 'Erro', 'status': 400})
 
