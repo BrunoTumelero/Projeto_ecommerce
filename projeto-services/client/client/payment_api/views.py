@@ -8,7 +8,7 @@ import base64
 import json
 
 from client.public_api.decorators import user_authenticate, company_autentication
-from .utils import _headers, get_token_api_payment
+from .utils import _headers, txid_generator, generate_key_pix
 from client.register.models import Shopping_Cart
 
 @csrf_exempt
@@ -33,7 +33,7 @@ def pix_payment(request):
     "valor": {
         "original": str(total_pushased)
     },
-    "chave": "03659197050",
+    "chave": "e63a6451-ec39-450a-aaac-6310baaa25e7",
     "solicitacaoPagador": "Informe o número ou identificador do pedido.",
     "infoAdicionais": [
         {
@@ -49,31 +49,50 @@ def pix_payment(request):
 
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
 
-    return JsonResponse({'message': response.json()})
+    return JsonResponse({'response': response.json()})
 
 @csrf_exempt
 @user_authenticate
 @company_autentication
-def get_bilings(request):
+def generate_qr_code(request):
+    loc_id = request.POST.get('loc_id', None)
+
+    headers = _headers()
+    certificate = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
+
+    if loc_id:
+        url = url = f"{settings.GN_BASE_URL}/v2/loc/{loc_id}/qrcode"
+    else:
+        return JsonResponse({'message': 'Informe o id de localização da cobrança', 'status': 404})
+
+    response = requests.request("GET", url, headers=headers, data={}, cert=certificate)
+    qrcode = response.json()
+
+    return JsonResponse({'response': qrcode['imagemQrcode']})
+
+@csrf_exempt
+@user_authenticate
+@company_autentication
+def get_pix_bilings(request):
     start_date = request.POST.get('start_date', None) #timezone
     end_date = request.POST.get('end_date', None)
     cpf = request.POST.get('cpf', None)
     cnpj = request.POST.get('cnpj', None)
     status = request.POST.get('status', None)
-    pag = request.POST.get('pag', 0)
+    pag = request.POST.get('pag', 1)
     items_pag = request.POST.get('items_pag', 20)
 
     headers = _headers()
     certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
     
     if start_date and end_date:
-        start_date += 'T00:00:00Z'
-        end_date += 'T00:00:00Z'
+        start_date += 'T00:00:00.000Z'
+        end_date += 'T00:00:00.000Z'
     else:
         return JsonResponse({'message': 'Informe a data', 'status': 404})
 
     if start_date and end_date:
-        url = f'{settings.GN_BASE_URL}/v2/cob?inicio={start_date}&fim={end_date}'
+        url = f'{settings.GN_BASE_URL}/v2/pix?inicio={start_date}&fim={end_date}'
     if cpf:
         url += f'&cpf={cpf}'
     if cnpj:
@@ -104,7 +123,7 @@ def pix_revision(request):
     certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
 
     if txid:
-        url = f'{settings.GN_BASE_URL}/v2/cob/:{txid}'
+        url = f'{settings.GN_BASE_URL}/v2/cob/{txid}'
     else:
         return JsonResponse({'message': 'Informe o localizador da cobrança', 'status': 404})
 
@@ -128,6 +147,7 @@ def pix_revision(request):
                 }
             ]
             })
+    print(generate_key_pix())
 
     response = requests.request("PATCH", url, headers=headers, data=payload, cert=certificado)
 
