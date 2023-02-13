@@ -138,6 +138,7 @@ class Company(AbstractBaseModel):
     cnpj = models.CharField(max_length=20)
     business_name = models.CharField(max_length=200)
     public_name = models.CharField(max_length=200)
+    picture_url = models.CharField(max_length=200, null=True, blank=True)
     business_phone = models.CharField(max_length=12)
     business_specialty = models.ForeignKey('register.CompanySpecialty', on_delete=models.CASCADE, related_name='type_company', null=True)
     plan = models.CharField(max_length=10,
