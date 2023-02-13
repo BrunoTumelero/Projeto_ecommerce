@@ -41,7 +41,7 @@ class User(AbstractBaseModel, AbstractBaseUser, PermissionsMixin):
 
 class UserSession(AbstractBaseModel):
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='session_user')
     session_token = models.CharField(max_length=64)
 
 class Consumers(AbstractBaseModel):
@@ -60,7 +60,7 @@ class Consumers(AbstractBaseModel):
                                 primary_key=True,
                                 related_name='consumer_name')
 
-    full_name = models.CharField(max_length=250, null=False, blank=False)
+    full_name = models.CharField(max_length=250)
     picture_url = models.CharField(max_length=200, null=True, blank=True)
     cpf = models.CharField(max_length=15)
     alias = models.CharField(max_length=200, blank=True)
@@ -156,8 +156,9 @@ class CompanySpecialty(AbstractBaseModel):
     sub_specialty = models.CharField(max_length=50, blank=True, null=True)
 
 class BusinessTransfer(AbstractBaseModel):
-    business = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='business_company')
+    business = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='payment_company')
     savings_account = models.BooleanField()
+    pix_key = models.CharField(max_length=200)
     company_bank = models.CharField(max_length=100)
     agency_bank = models.CharField(max_length=8)
     bank_account = models.CharField(max_length=8)
@@ -199,6 +200,9 @@ class SubCategory(AbstractBaseModel):
     description = models.CharField(max_length=300)
     category = models.ForeignKey('register.ProductCategory', on_delete=models.CASCADE, related_name='subcategory_productcategory')
 
+class Sales(AbstractBaseModel):
+    company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='company_sales')
+    product = models.ForeignKey('register.Products', on_delete=models.PROTECT, related_name='product_sale')
 class Log(AbstractBaseModel):
     user = models.ForeignKey('register.User', on_delete=models.CASCADE)
     url = models.CharField(max_length=250, blank=True)

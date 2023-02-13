@@ -1,6 +1,8 @@
 import requests
 import base64
 import json
+import string
+import random
 
 from gerencianet import Gerencianet
 from django.conf import settings
@@ -52,9 +54,13 @@ def generate_key_pix():
     payload={}
     headers = {
         'authorization': f'Bearer {get_token_api_payment()}',
-        'Content-Type': 'application/json'
+        #'Content-Type': 'application/json'
     }
 
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
+    print(response)
 
-    return response.text
+    return response.json()
+
+def txid_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))

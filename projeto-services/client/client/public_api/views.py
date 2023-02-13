@@ -28,14 +28,14 @@ def login(request):
             if _type == type_user:
                 session_token = _create_token(user)
 
-                consumer =  Consumers.objects.get(user_id = user.id)
+                #consumer =  Consumers.objects.get(user_id=user.id)
 
                 return JsonResponse({
                     '_id': user.id,
                     '_token': session_token,
                     'type': _type,
-                    'full_name': consumer.full_name,
-                    'picture_url': consumer.picture_url,
+                    #'full_name': consumer.full_name,
+                    #'picture_url': consumer.picture_url,
                     'message': 'Login efetuado com sucesso.',
                     'status': 200
                 })
