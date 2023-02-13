@@ -79,6 +79,25 @@ class Consumers(AbstractBaseModel):
 
     card = models.ForeignKey('register.ConsumersCards', on_delete=models.CASCADE, blank=True, null=True, related_name='card_consumer')
 
+    def to_json(self):
+        return {
+            '_id': self.pk,
+            'name': self.full_name,
+            'image': self.picture_url,
+            'cpf': self.cpf,
+            'alias': self.alias,
+            'phone': self.whatsapp,
+            'birthday': self.birthday,
+            'gender': self.gender,
+            'cep': self.cep,
+            'street': self.street,
+            'street_number': self.street_number,
+            'complement': self.complement,
+            'neighborhood': self.neighborhood,
+            'city': self.city,
+            'card': self.card
+        }
+
 
 class ConsumersCards(AbstractBaseModel):
 
@@ -108,6 +127,15 @@ class ConsumersCards(AbstractBaseModel):
                                 choices=CARDS_CHOICES,
                                 null=False, blank=False)
 
+    def to_json(self):
+        return {
+            'name': self.consumer_name,
+            'card_number': self.card_number,
+            'cod': self.cod_card,
+            'expiration_date': self.expiration_date,
+            'flag': self.flag_card
+        }
+
 class Company(AbstractBaseModel):
 
     PLAN_BASIC = "plan_basic"
@@ -123,9 +151,7 @@ class Company(AbstractBaseModel):
                                 primary_key=True,
                                 related_name='company_name')
     
-    name_owner = models.CharField(max_length=150)
-    email_owner = models.CharField(max_length=100, blank=True, null=True)
-    phone_owner = models.CharField(max_length=12)
+    email_company = models.CharField(max_length=100, blank=True, null=True)
     cep = models.CharField(max_length=10)
     state = models.ForeignKey('register.State', on_delete=models.CASCADE, related_name='state_company')
     city = models.ForeignKey('register.City', on_delete=models.CASCADE, related_name='city_company')
@@ -133,7 +159,7 @@ class Company(AbstractBaseModel):
     street = models.CharField(max_length=100)
     number = models.CharField(max_length=10)
     complement = models.CharField(max_length=200, blank=True, null=True)
-    cpf_owner = models.CharField(max_length=15)
+    cpf_owner = models.CharField(max_length=15, blank=True, null=True)
 
     cnpj = models.CharField(max_length=20)
     business_name = models.CharField(max_length=200)
@@ -144,9 +170,38 @@ class Company(AbstractBaseModel):
     plan = models.CharField(max_length=10,
                             choices=PLAN_CHOICES)
 
+    def to_json(self):
+        return {
+            'company_id': self.pk,
+            'user_id': self.user,
+            'email': self.email_company,
+            'cep': self.cep,
+            'state': self.state,
+            'city': self.city,
+            'neighborhood': self.neighborhood,
+            'street': self.street,
+            'number': self.number,
+            'complement': self.complement,
+            'cpf_owner': self.cpf_owner,
+            'cnpj': self.cnpj,
+            'company_name': self.business_name,
+            'name': self.public_name,
+            'image': self.picture_url,
+            'company_phone': self.business_phone,
+            'company_category': self.business_specialty,
+            'plan': self.plan
+        }
+
 class City(AbstractBaseModel):
     name = models.CharField(max_length=100)
     state = models.ForeignKey('register.State', on_delete=models.CASCADE, related_name='state_city')
+
+    def to_json(self):
+        return {
+            'city': self.name,
+            'state': self.state_city.name,
+            'uf': self.state_city.name
+        }
 
 class State(AbstractBaseModel):
     uf = models.CharField(max_length=2)
@@ -173,7 +228,7 @@ class Products(AbstractBaseModel):
     product_price = models.DecimalField(max_digits=8, decimal_places=2)
     is_avalable = models.BooleanField(default=False)
 
-    def to_product_json(self):
+    def to_json(self):
         return {
             'id': self.pk,
             'company': self.company.pk,
@@ -264,6 +319,14 @@ class Shopping_Cart(AbstractBaseModel):
     amount = models.IntegerField()
     selected = models.BooleanField()
 
+    def to_json(self):
+        return {
+            'consumer': self.shopping_consumers.full_name,
+            'product': self.product,
+            'amount': self.amount,
+            'selected': self.selected
+        }
+
 class Whishes(AbstractBaseModel):
     LOW = 'low'
     MEDIUM = 'medium'
@@ -281,6 +344,16 @@ class Whishes(AbstractBaseModel):
     annotation = models.CharField(max_length=200)
     priority = models.CharField(max_length=6, choices=PRIORITY_CHOICES, default=MEDIUM)
     amount = models.CharField(max_length=4)
+
+    def to_json(self):
+        return {
+            'name_list': self.name_whishes_list,
+            'conumer': self.consumer,
+            'product': self.product,
+            'annotation': self.annotation,
+            'priority': self.priority,
+            'amount': self.amount
+        }
     
 class ProductsRating(AbstractBaseModel):
     VERY_LOW = '1'
@@ -300,3 +373,10 @@ class ProductsRating(AbstractBaseModel):
     user = models.ForeignKey('register.User', on_delete=models.SET_NULL, null=True, related_name='rating_user')
     product = models.ForeignKey('register.Products', on_delete=models.SET_NULL, null=True, related_name='rating_product')
     rating = models.CharField(max_length= 5, choices=RATING_CHOICES)
+
+    def to_json(self):
+        return {
+            'user': self.user,
+            'product': self.product,
+            'rating': self.rating
+        }
