@@ -6,6 +6,7 @@ from django.utils import timezone
 import requests
 import base64
 import json
+from gerencianet import Gerencianet
 
 from client.public_api.decorators import user_authenticate, company_autentication
 from .utils import _headers, txid_generator, generate_key_pix
@@ -147,11 +148,44 @@ def pix_revision(request):
                 }
             ]
             })
-    print(generate_key_pix())
 
     response = requests.request("PATCH", url, headers=headers, data=payload, cert=certificado)
 
     return JsonResponse({
         'response': response.json(),
+        'status': 200
+    })
+
+@csrf_exempt
+@user_authenticate
+@company_autentication
+def create_signature(request):
+    plan_name = request.POST.get('plan_name', None)
+    interval = request.POST.get('interval', None)
+    repeat = request.POST.get('repeat', None)
+ 
+    if interval:
+        interval = int(interval)
+    if repeat:
+        repeat = int(repeat)
+
+    options = {
+        'client_id': settings.DEV_CLIENT_KEY,
+        'client_secret': settings.DEV_SECRET_KEY,
+        'sandbox': True
+    }
+    
+    gn = Gerencianet(options)
+    
+    body = {
+        'name': plan_name,
+        'repeats': repeat,
+        'interval': interval
+    }
+    
+    plan =  gn.create_plan(body=body)
+
+    return JsonResponse({
+        **plan,
         'status': 200
     })

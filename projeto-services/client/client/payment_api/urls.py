@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^get_pix_bilings$', get_pix_bilings, name='get_pix_bilings'),
     url(r'^pix_revision$', pix_revision, name='pix_revision'),
     url(r'^generate_qr_code$', generate_qr_code, name='generate_qr_code'),
+    url(r'^create_signature$', create_signature, name='create_signature'),
 ]
