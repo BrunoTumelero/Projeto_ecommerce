@@ -64,3 +64,11 @@ def generate_key_pix():
 
 def txid_generator(size=6, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
+
+def validation_gn_keys():
+    options = {
+    'client_id': settings.DEV_CLIENT_KEY,
+    'client_secret': settings.DEV_SECRET_KEY,
+    'sandbox': True
+    }
+    return options

@@ -9,7 +9,7 @@ import json
 from gerencianet import Gerencianet
 
 from client.public_api.decorators import user_authenticate, company_autentication
-from .utils import _headers, txid_generator, generate_key_pix
+from .utils import _headers, txid_generator, generate_key_pix, validation_gn_keys
 from client.register.models import Shopping_Cart
 
 @csrf_exempt
@@ -169,13 +169,7 @@ def create_signature(request):
     if repeat:
         repeat = int(repeat)
 
-    options = {
-        'client_id': settings.DEV_CLIENT_KEY,
-        'client_secret': settings.DEV_SECRET_KEY,
-        'sandbox': True
-    }
-    
-    gn = Gerencianet(options)
+    gn = Gerencianet(validation_gn_keys())
     
     body = {
         'name': plan_name,
@@ -188,4 +182,65 @@ def create_signature(request):
     return JsonResponse({
         **plan,
         'status': 200
+    })
+
+@csrf_exempt
+@user_authenticate
+def plan_subscribe(request):
+    plan_id = request.POST.get('plan_id', None)
+    consumer_id = request.POST.get('consumer_id', None)
+    payment_type = request.POST.get('payment_type', None)
+    
+    gn = Gerencianet(validation_gn_keys())
+
+    params = {
+        'id': plan_id
+    }
+
+    body = {
+        'items': [{
+            'name': "Product 1",
+            'value': 1000,
+            'amount': 2
+        }],
+        'payment': {
+            'credit_card': {
+                'customer': {
+                    'name': "Gorbadoc Oldbuck",
+                    'cpf': "94271564656",
+                    'email': "oldbuck@gerencianet.com.br",
+                    'phone_number': "5144916523",
+                    'birth': "1977-01-15",
+                    'billing_address': {
+                        "street": "",
+                        "number": "",
+                        "neighborhood": "",
+                        "zipcode": "",
+                        "city": "",
+                        "complement": "",
+                        "state": "",
+                    "juridical_person": {
+                        "corporate_name": "",
+                        "cnpj": "",
+                        }
+                    },
+                },
+                "payment_token": "",
+                "discount": {
+                    "type": "",
+                        "percentage": "",
+                        "currency": "",
+                    "value": "",
+                },
+                "message": "",
+                "trial_days": "",
+                
+            }
+        }
+    }
+
+    response = gn.one_step_subscription(params=params, body=body)
+
+    return JsonResponse({
+        **response,
     })
