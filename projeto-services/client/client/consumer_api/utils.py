@@ -1,6 +1,7 @@
 import hashlib
 import time
 import random
+import string
 
 from client.register.models import *
 
@@ -15,4 +16,8 @@ def _create_token(user):
     return session_token
 
 def _create_activation_token():
-    return str(random.randint(100000, 999999))
+    cod = string.ascii_letters + string.digits
+    len_cod = random.randint(5, 20)
+    key = ''.join(random.choice(cod) for _ in range(len_cod))
+    return str(key)
+    
