@@ -205,27 +205,35 @@ def plan_subscribe(request):
         }],
         'payment': {
             'credit_card': {
+                'installments': 1,
+                'billing_address': {
+                    'street': "Av. JK",
+                    'number': 909,
+                    'neighborhood': "Bauxita",
+                    'zipcode': "35400000",
+                    'city': "Ouro Preto",
+                    'state': "MG"
+                },
                 'customer': {
                     'name': "Gorbadoc Oldbuck",
                     'cpf': "94271564656",
                     'email': "oldbuck@gerencianet.com.br",
                     'phone_number': "5144916523",
                     'birth': "1977-01-15",
-                    'billing_address': {
-                        "street": "",
-                        "number": "",
-                        "neighborhood": "",
-                        "zipcode": "",
-                        "city": "",
-                        "complement": "",
-                        "state": "",
+                    'address': {
+                        "street": "Nome da rua",
+                        "number": 1234,
+                        "neighborhood": "Nome do bairro",
+                        "zipcode": "95123456",
+                        "city": "Nome da cidade",
+                        "complement": "789",
+                        "state": "RS",},
                     "juridical_person": {
-                        "corporate_name": "",
-                        "cnpj": "",
-                        }
-                    },
+                        "corporate_name": "Company name",
+                        "cnpj": "12345678996321",
+                        },
                 },
-                "payment_token": "",
+                "payment_token": "6426f3abd8688639c6772963669bbb8e0eb3c319",
                 "discount": {
                     "type": "",
                         "percentage": "",
@@ -233,7 +241,7 @@ def plan_subscribe(request):
                     "value": "",
                 },
                 "message": "",
-                "trial_days": "",
+                "trial_days": "7",
                 
             }
         }

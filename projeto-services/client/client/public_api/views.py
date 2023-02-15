@@ -1,6 +1,7 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate
 from django.http import JsonResponse
+from django.utils import timezone
 
 from .utils import _create_token
 from .decorators import user_authenticate
@@ -33,6 +34,8 @@ def login(request):
 
             if _type == type_user:
                 session_token = _create_token(user)
+                user.last_login = timezone.now()
+                user.save()
 
                 return JsonResponse({
                     '_id': user.id,

@@ -6,7 +6,6 @@ from django.conf import settings
 
 from client.register.models import *
 from .utils import _create_token, _create_activation_token
-from client.payment_api.utils import generate_key_pix, _headers
 from client.consumer_api.forms import ConsumersCardsForm, WhishesForm, ProductsRatingForm, ShoppingCartForm
 from client.public_api.decorators import user_authenticate
 
@@ -41,7 +40,7 @@ def create_user(request):
                     user.set_password(password)
                     user.is_active = True
                     user.is_consumer = True
-                    user.activation_token = _create_activation_token()
+                    user.activation_key = _create_activation_token()
                     session_token = _create_token(user)
                     user.save()
                     consumer, _ = Consumers.objects.get_or_create(user=user)
