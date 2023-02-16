@@ -267,10 +267,6 @@ class Permission(AbstractBaseModel):
     permission_name = models.CharField(max_length=80)
     description = models.CharField(max_length=80)
 
-class UserPermission(AbstractBaseModel):
-    user = models.ForeignKey('register.User', on_delete=models.PROTECT, related_name='permissions')
-    permission = models.ForeignKey('register.Permission', on_delete=models.PROTECT, related_name='user_permissions')
-
 class CompanyPermission(AbstractBaseModel):
     MASTER = "Master"
     REPORTS = "reports"
@@ -285,7 +281,8 @@ class CompanyPermission(AbstractBaseModel):
         (DELIVERIES, 'Entregas'),
         (BASIC, 'Basico')
     )
-    permicted = models.CharField(max_length=80)
+    company = models.ForeignKey('register.Company', on_delete=models.CASCADE, related_name='company_permissions')
+    permicted = models.ForeignKey('register.Permission', on_delete=models.PROTECT, related_name='permissions_company')
     description = models.CharField(max_length=80)
     level_permissions = models.CharField(max_length=6, choices=PERMISSIONS_CHOICES)
 

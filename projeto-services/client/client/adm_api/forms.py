@@ -1,6 +1,6 @@
 from django import forms
 
-from client.register.models import State, City, CompanySpecialty, ProductCategory, SubCategory, Permission
+from client.register.models import State, City, CompanySpecialty, ProductCategory, SubCategory, Permission, CompanyPermission
 
 class StateForm(forms.ModelForm):
 
@@ -37,3 +37,9 @@ class PermissionForm(forms.ModelForm):
     class Meta:
         model = Permission
         fields = ['permission_name', 'description']
+        
+class CompanyPermissionForm(forms.ModelForm):
+    
+    class Meta:
+        model = CompanyPermission
+        fields = ['company', 'permicted', 'description', 'level_permissions']

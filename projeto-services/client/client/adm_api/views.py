@@ -2,8 +2,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import staff_authenticate
-from client.register.models import State, City, ProductCategory, User, CompanySpecialty, SubCategory, Permission
-from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm, ProductSubCategoryForm, PermissionForm
+from client.register.models import State, City, ProductCategory, User, CompanySpecialty, SubCategory, Permission, CompanyPermission
+from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm, ProductSubCategoryForm, PermissionForm, CompanyPermissionForm
 
 @csrf_exempt
 @staff_authenticate
@@ -191,4 +191,22 @@ def create_permission(request):
             print(form.errors)
             return JsonResponse({'message': 'Erro', 'status': 400})
     return JsonResponse({'message': 'Informe campos obrigatórios', 'status': 404})
+
+@csrf_exempt
+@staff_authenticate
+def create_company_permissions(request):
+    data = request.POST.copy()
     
+    try:
+        permission = CompanyPermission.objects.get(company=data['company'])
+        form = CompanyPermissionForm(instance=permission, data=data)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Permissões alteradas com sucesso', 'status': 200})
+    except CompanyPermission.DoesNotExist:
+        form = CompanyPermissionForm(data=data)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Permissões alteradas com sucesso', 'status': 200})
+        
+    return JsonResponse({'message': 'ERRO', 'status': 400})
