@@ -16,10 +16,10 @@ def login(request):
     if user_email and password:
         user = authenticate(username=user_email, password=password, email=user_email)
         if user is not None:
-            
+            print(user)
             if user.is_consumer and user.is_company:
                 _type = 'consumer_company'
-            elif user.is_consumer and not user.is_company:
+            elif user.is_consumer and not user.is_company and not user.is_staff:
                 _type = 'consumer'
                 full_name = user.consumer_name.full_name
                 picture_url = user.consumer_name.picture_url
@@ -29,6 +29,8 @@ def login(request):
                 picture_url = user.company_name.picture_url
             elif user.is_staff:
                 _type = 'staff'
+                full_name = user.consumer_name.full_name
+                picture_url = user.consumer_name.picture_url
             else:
                 _type = ''
 
