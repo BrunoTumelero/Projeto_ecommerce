@@ -2,8 +2,8 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
 from .decorators import staff_authenticate
-from client.register.models import State, City, ProductCategory, User, CompanySpecialty, SubCategory
-from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm, ProductSubCategoryForm
+from client.register.models import State, City, ProductCategory, User, CompanySpecialty, SubCategory, Permission
+from .forms import StateForm, CityForm, CompanySpecialtyForm, ProductCategoryForm, ProductSubCategoryForm, PermissionForm
 
 @csrf_exempt
 @staff_authenticate
@@ -170,3 +170,25 @@ def create_product_category(request):
                 print(form.errors)
                 return JsonResponse({'message': 'Erro', 'status': 400})
     return JsonResponse({'message': 'Informe a categoria', 'status': 400})
+
+@csrf_exempt
+@staff_authenticate
+def create_permission(request):
+    permission_name = request.POST.get('permission', None)
+    data = request.POST.copy()
+    
+    if permission_name:
+        data['permission_name'] = permission_name.lower()
+        try:
+            permission = Permission.objects.get(permission_name=data['permission_name'])
+            form = PermissionForm(instance=permission, data=data)
+        except Permission.DoesNotExist:
+            form = PermissionForm(data=data)
+        if form.is_valid():
+            form.save()
+            return JsonResponse({'message': 'Permissão criada com sucesso', 'status': 200})
+        else:
+            print(form.errors)
+            return JsonResponse({'message': 'Erro', 'status': 400})
+    return JsonResponse({'message': 'Informe campos obrigatórios', 'status': 404})
+    

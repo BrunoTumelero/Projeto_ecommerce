@@ -272,8 +272,22 @@ class UserPermission(AbstractBaseModel):
     permission = models.ForeignKey('register.Permission', on_delete=models.PROTECT, related_name='user_permissions')
 
 class CompanyPermission(AbstractBaseModel):
+    MASTER = "Master"
+    REPORTS = "reports"
+    PAYMENTS = "payments"
+    DELIVERIES = "deliveries"
+    BASIC = "basic"
+    
+    PERMISSIONS_CHOICES = (
+        (MASTER, 'Completo'),
+        (REPORTS, 'Relatorios'),
+        (PAYMENTS, 'Pagamentos'),
+        (DELIVERIES, 'Entregas'),
+        (BASIC, 'Basico')
+    )
     permicted = models.CharField(max_length=80)
     description = models.CharField(max_length=80)
+    level_permissions = models.CharField(max_length=6, choices=PERMISSIONS_CHOICES)
 
 class UserCompanyPermission(AbstractBaseModel):
     LEVEL_ADM = 'administrator'

@@ -5,6 +5,7 @@ from django.db import IntegrityError
 
 from client.register.models import *
 from client.public_api.utils import _create_token
+from client.consumer_api.utils import _create_activation_token
 from client.company_api.forms import ProductsForm
 from client.public_api.decorators import company_autentication, user_authenticate
 
@@ -104,3 +105,43 @@ def create_new_product(request):
             return JsonResponse({'message': 'Erro ao salvar o produto', 'error': form.errors, 'status':404})
     
     return JsonResponse({'message': 'Erro ao adicionar o produto', 'status': 400})
+
+@csrf_exempt
+@user_authenticate
+@company_autentication
+def create_employee(request):
+    full_name = request.POST.get('full_name', None)
+    user_email = request.POST.get('user_email', None)
+    password = request.POST.get('password', None)
+    phone = request.POST.get('phone', None)
+    cpf = request.POST.get('cpf', None)
+    
+    if full_name and user_email and password and phone and cpf:
+        print(11111)
+        try:
+            user = User.objects.get(email=user_email)
+            user.company_id = request.user.pk
+            session_token = _create_token(user)
+            user.save()
+            return JsonResponse({'message': 'Usuário cadastrado com sucesso', 'id': user.id, 'token': session_token, 'status': 200})
+        except User.DoesNotExist:
+            try:
+                user.email = user_email
+                user.set_password(password)
+                user.is_active = True
+                user.is_consumer = True
+                user.is_company = True
+                user.activation_key = _create_activation_token()
+                session_token = _create_token(user)
+                user.save()
+                consumer, _ = Consumers.objects.get_or_create(user=user)
+                consumer.full_name = full_name
+                consumer.whatsapp = phone
+                consumer.cpf = cpf
+                consumer.save()
+            
+                return JsonResponse({'message': 'Usuário cadastrado com sucesso', 'id': user.id, 'token': session_token, 'status': 200})
+            except IntegrityError:
+                #email duplicate
+                return JsonResponse({'message': 'Emais já cadastrado', 'status': 404})
+    return JsonResponse({'message': 'Informe os campos obrigatórios', 'status': 400})
