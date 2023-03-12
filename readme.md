@@ -4,9 +4,6 @@
 	🚧  Projeto ⚙️ Em construção...  🚧
 </h4>
 
-[![License](https://img.shields.io/badge/license-MIT-_red.svg)](https://opensource.org/licenses/MIT)
-[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/BrunoTumelero/Projeto_dev/issues)
-
 Tabela de conteúdos
 =================
 <!--ts-->
@@ -96,8 +93,10 @@ Tabela de conteúdos
 
 
 ## Contribuição
+[![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/BrunoTumelero/Projeto_dev/issues)
 
 ## Licença
+[![License](https://img.shields.io/badge/License-Apache_2.0-_red.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Autor
 
