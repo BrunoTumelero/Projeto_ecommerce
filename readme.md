@@ -5,7 +5,6 @@
 
 E commerce
 
-There are also various search engines supported by go-dork, including Google, Shodan, Bing, Duck, Yahoo and Ask.
 
 - [Install](#install)
 - [Funcionalidades](#Funcionalidades)
@@ -27,7 +26,6 @@ There are also various search engines supported by go-dork, including Google, Sh
 
 ### Basic Usage
 
-It's fairly simple, go-dork can be run with:
 
 ```bash
 > 
@@ -39,7 +37,6 @@ It's fairly simple, go-dork can be run with:
 > 
 ```
 
-Queries can also be input with stdin
 
 ```bash
 > 
