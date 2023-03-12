@@ -35,7 +35,7 @@ Tabela de conteúdos
 ## Apis
 
 ### Company
-#### Api que contem todos os endpoint usados exclusivamente pelo vendedor.
+#### Api que contém todos os endpoint usados exclusivamente pelo vendedor.
 ---
 #### Features
 	- [x] Cadastrar nova empresa
@@ -43,7 +43,7 @@ Tabela de conteúdos
 	- [ ] Editar produtos
 	- [x] Criar funcionários 
 ### Consumer
-#### Api que contem todos os endpoint usados exclusivamente pelo consumidor final.
+#### Api que contém todos os endpoint usados exclusivamente pelo consumidor final.
 ---
 #### Features
 	- [x] Criação de cadastro
@@ -56,7 +56,7 @@ Tabela de conteúdos
 	- [x] Remover item do carrinho
 
 ### Payment
-#### Api que contem todos os endpoint usados exclusivamente para pagamentos.
+#### Api que contém todos os endpoint usados exclusivamente para pagamentos.
 ---
 #### Features
 	- [ ] Gerar qr code de pagamento
