@@ -79,6 +79,7 @@ Tabela de conteúdos
 	- [x] Cria categorias para produtos
 	- [x] Cria permissões
 	- [x] Cria premissões para empresas
+	- [x] Criar usuário com acesso staff
 
 ### Public
 #### Api de uso comum.
