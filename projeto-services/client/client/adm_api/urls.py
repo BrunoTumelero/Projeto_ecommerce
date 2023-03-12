@@ -13,4 +13,5 @@ urlpatterns = [
     url(r'^create_sub_category$', create_sub_category, name='create_sub_category'),
     url(r'^create_product_category$', create_product_category, name='create_product_category'),
     url(r'^create_permission$', create_permission, name='create_permission'),
+    url(r'^create_staff$', create_staff, name='create_staff'),
 ]

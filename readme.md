@@ -1,8 +1,12 @@
 # Project
 
+<<<<<<< Updated upstream
 <h4 align="center"> 
 	🚧  Projeto ⚙️ Em construção...  🚧
 </h4>
+=======
+# 💻 Sobre o projeto
+>>>>>>> Stashed changes
 
 Tabela de conteúdos
 =================
