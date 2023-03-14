@@ -150,7 +150,7 @@ class Company(AbstractBaseModel):
                                 primary_key=True,
                                 related_name='company_name')
     
-    email_company = models.CharField(max_length=100, blank=True, null=True)
+    email_company = models.CharField(max_length=100)
     cep = models.CharField(max_length=10)
     state = models.ForeignKey('register.State', on_delete=models.CASCADE, related_name='state_company')
     city = models.ForeignKey('register.City', on_delete=models.CASCADE, related_name='city_company')
