@@ -11,7 +11,6 @@ from client.public_api.decorators import company_autentication, user_authenticat
 
 @csrf_exempt
 def create_company(request):
-    name_owner = request.POST.get('name_owner', None)
     email_owner = request.POST.get('email_owner', None)
     phone_owner = request.POST.get('phone_owner', None)
     cep = request.POST.get('cep', None)
@@ -25,6 +24,7 @@ def create_company(request):
     cnpj = request.POST.get('cnpj', None)
     business_name = request.POST.get('business_name', None)
     public_name = request.POST.get('public_name', None)
+    picture_url = request.POST.get('picture_url', None)
     business_phone = request.POST.get('business_phone', None)
     business_specialty = request.POST.get('business_specialty', None)
     plan = request.POST.get('plan', None)
@@ -52,9 +52,7 @@ def create_company(request):
             try:
                 company = Company(
                     user = user,
-                    name_owner = name_owner,
-                    email_owner = email_owner,
-                    phone_owner = phone_owner,
+                    email_company = email_owner,
                     cep = cep,
                     state = state,
                     city = city,
@@ -65,6 +63,7 @@ def create_company(request):
                     cpf_owner = cpf_owner,
                     cnpj = cnpj,
                     business_name = business_name,
+                    #picture_url = picture_url,
                     public_name = public_name,
                     business_phone = business_phone,
                     business_specialty = business_specialty,
@@ -81,6 +80,8 @@ def create_company(request):
 
             except User.MultipleObjectsReturned:
                 return JsonResponse({'message': 'Email já cadastrado', 'status': 400})
+        else:
+            return JsonResponse({'message': 'Erro de formulário', 'status': 404})
 
     return JsonResponse({'message': 'Erro', 'status': 400})
 
