@@ -63,7 +63,7 @@ def create_company(request):
                     cpf_owner = cpf_owner,
                     cnpj = cnpj,
                     business_name = business_name,
-                    #picture_url = picture_url,
+                    picture_url = picture_url,
                     public_name = public_name,
                     business_phone = business_phone,
                     business_specialty = business_specialty,
@@ -106,6 +106,31 @@ def create_new_product(request):
             return JsonResponse({'message': 'Erro ao salvar o produto', 'error': form.errors, 'status':404})
     
     return JsonResponse({'message': 'Erro ao adicionar o produto', 'status': 400})
+
+@csrf_exempt
+@user_authenticate
+@company_autentication
+def edit_product(request, pk):
+    product_name = request.POST.get('product_name', None)
+    product_description = request.POST.get('product_description', None)
+    product_category = request.POST.get('product_category', None)
+    product_price = request.POST.get('product_price', None)
+    is_avaliable = request.POST.get('is_avaliable', None)
+    
+    if pk:
+        product = Products.objects.get(pk=pk)
+        product.company = request.user.company
+        product.product_name = product_name
+        product.product_description = product_description
+        product.product_category = product_category
+        product.product_price = product_price
+        product.is_avalable = is_avaliable
+        
+        product.save()
+        
+        return JsonResponse({'message': 'Produto alterado com sucesso', 'status': 200})
+        
+    return JsonResponse({'message': 'Produto inválido', 'status': 400})
 
 @csrf_exempt
 @user_authenticate

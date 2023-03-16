@@ -227,7 +227,7 @@ class Products(AbstractBaseModel):
     product_price = models.DecimalField(max_digits=8, decimal_places=2)
     is_avalable = models.BooleanField(default=False)
 
-    def to_json(self):
+    def to_product_json(self):
         return {
             'id': self.pk,
             'company': self.company.pk,

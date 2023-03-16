@@ -37,7 +37,7 @@ Tabela de conteúdos
 #### Features
 	- [x] Cadastrar nova empresa
 	- [x] Criar novo produto
-	- [ ] Editar produtos
+	- [x] Editar produtos
 	- [x] Criar funcionários 
 ### Consumer
 #### Api que contém todos os endpoint usados exclusivamente pelo consumidor final.
@@ -47,7 +47,7 @@ Tabela de conteúdos
 	- [x] Alteração de senha
 	- [x] Pesquisa por um produto específico 
 	- [x] Pesquisa pro produtos 
-	- [x]Criação de lista de desejos
+	- [x] Criação de lista de desejos
 	- [x] Avaliação do produto
 	- [x] Adicionar item no carrinho
 	- [x] Remover item do carrinho
@@ -56,8 +56,8 @@ Tabela de conteúdos
 #### Api que contém todos os endpoint usados exclusivamente para pagamentos.
 ---
 #### Features
-	- [ ] Gerar qr code de pagamento
-	- [ ] Pagamento por pix
+	- [x] Gerar qr code de pagamento
+	- [x] Pagamento por pix
 	- [ ] Pagamento com cartão de crédito
 	- [ ] Pagamemnto por boleto
 	- [ ] Assinatura recorrente
