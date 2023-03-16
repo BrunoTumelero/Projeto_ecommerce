@@ -205,7 +205,6 @@ def plan_subscribe(request):
         }],
         'payment': {
             'credit_card': {
-                'installments': 1,
                 'billing_address': {
                     'street': "Av. JK",
                     'number': 909,
@@ -235,13 +234,13 @@ def plan_subscribe(request):
                 },
                 "payment_token": "6426f3abd8688639c6772963669bbb8e0eb3c319",
                 "discount": {
-                    "type": "",
-                        "percentage": "",
-                        "currency": "",
-                    "value": "",
+                    "type": "currency",
+                        #"percentage": "",
+                        #"currency": "100",
+                    "value": 100,
                 },
                 "message": "",
-                "trial_days": "7",
+                "trial_days": 7,
                 
             }
         }
