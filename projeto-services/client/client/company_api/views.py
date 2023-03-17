@@ -115,8 +115,11 @@ def edit_product(request, pk):
     product_description = request.POST.get('product_description', None)
     product_category = request.POST.get('product_category', None)
     product_price = request.POST.get('product_price', None)
-    is_avaliable = request.POST.get('is_avaliable', None)
+    is_avaliable = request.POST.get('is_avaliable', False)
     
+    if is_avaliable == 'true' or is_avaliable == 'True':
+        is_avaliable = True
+        
     if pk:
         if product_category:
             category = ProductCategory.objects.get(pk=product_category)
@@ -126,7 +129,8 @@ def edit_product(request, pk):
         product.product_description = product_description
         product.product_category = category
         product.product_price = product_price
-        product.is_avalable = is_avaliable if is_avaliable else False
+        product.is_avalable = is_avaliable
+        print(is_avaliable)
         
         product.save()
         
