@@ -9,7 +9,7 @@ import json
 from gerencianet import Gerencianet
 
 from client.public_api.decorators import user_authenticate, company_autentication
-from .utils import _headers, txid_generator, generate_key_pix, validation_gn_keys
+from .utils import _headers, txid_generator, generate_key_pix, validation_gn_keys, save_pix
 from client.register.models import Shopping_Cart
 
 @csrf_exempt
@@ -18,6 +18,11 @@ def pix_payment(request):
     value_purchases = Shopping_Cart.objects.filter(consumer=request.user.pk)
     total_item = [item.total for item in value_purchases]
     total_pushased = sum(total_item)
+    name_infometion = request.POST.get('name_information', "Campo adicional")
+    additional_information = request.POST.get('additional_inormation', "Informação adicional")
+
+    print(value_purchases.product_id)
+    company = value_purchases.product.company
 
     headers = _headers()
     certificado = f'client/payment_api/certificates/{settings.CERT_DEV}'
@@ -38,17 +43,15 @@ def pix_payment(request):
     "solicitacaoPagador": "Informe o número ou identificador do pedido.",
     "infoAdicionais": [
         {
-        "nome": "Campo 1",
-        "valor": "Informação Adicional1 do PSP-Recebedor"
+        "nome": name_infometion,
+        "valor": additional_information
         },
-        {
-        "nome": "Campo 2",
-        "valor": "Informação Adicional2 do PSP-Recebedor"
-        }
     ]
     })
 
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
+    
+    save_pix(response.json(), request.pk, company)
 
     return JsonResponse({'response': response.json()})
 
