@@ -390,3 +390,20 @@ class ProductsRating(AbstractBaseModel):
             'product': self.product,
             'rating': self.rating
         }
+        
+class pix(AbstractBaseModel):
+    recive = models.ForeignKey('register.Company', on_delete=models.CASCADE)
+    payer = models.ForeignKey('register.Consumers', on_delete=models.CASCADE)
+    txid = models.CharField(max_length=32)
+    value = models.CharField(max_length=8)
+    time = models.CharField(max_length=25)
+    payer_pix_key = models.CharField(max_length=45)
+    return_pix = models.ForeignKey('register.return_pix', on_delete=models.CASCADE)
+    
+class return_pix(AbstractBaseModel):
+    recive = models.ForeignKey('register.Company', on_delete=models.CASCADE)
+    payer = models.ForeignKey('register.Consumers', on_delete=models.CASCADE)
+    _id = models.CharField(max_length=40)
+    rtrid = models.CharField(max_length=40)
+    values = models.CharField(max_length=8)
+    status = models.BooleanField()

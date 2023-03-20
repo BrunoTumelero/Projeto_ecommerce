@@ -159,6 +159,49 @@ def pix_revision(request):
 @csrf_exempt
 @user_authenticate
 @company_autentication
+def pix_recived(request):
+    start_date = request.POST.get('start_date', None) #timezone
+    end_date = request.POST.get('end_date', None)
+    txid = request.POST.get('txid', None)
+    cpf = request.POST.get('cpf', None)
+    cnpj = request.POST.get('cnpj', None)
+    pag = request.POST.get('pag', 1)
+    items_pag = request.POST.get('items_pag', 20)
+
+    headers = _headers()
+    certificado = f'{settings.PATH_CREDENTIALS}{settings.CERT_DEV}'
+    
+    if start_date and end_date:
+        start_date += 'T00:00:00.000Z'
+        end_date += 'T00:00:00.000Z'
+    else:
+        return JsonResponse({'message': 'Informe a data', 'status': 404})
+
+    if start_date and end_date:
+        url = f'{settings.GN_BASE_URL}/v2/pix?inicio={start_date}&fim={end_date}'
+    if cpf:
+        url += f'&cpf={cpf}'
+    if cnpj:
+        url += f'&cnpj={cnpj}'
+    if txid:
+        url += f'&txid={txid}'
+    if pag:
+        url += f'&paginacao.paginaAtual={pag}'
+    if items_pag:
+        url += f'&paginacao.itensPorPagina={pag}'
+
+    payload = {}
+    
+    response = requests.request("GET", url, headers=headers, data=payload, cert=certificado)
+
+    return JsonResponse({
+        'message': response.json(),
+        'status': 200
+    })
+    
+@csrf_exempt
+@user_authenticate
+@company_autentication
 def create_signature(request):
     plan_name = request.POST.get('plan_name', None)
     interval = request.POST.get('interval', None)
