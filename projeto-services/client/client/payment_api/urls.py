@@ -11,4 +11,5 @@ urlpatterns = [
     url(r'^generate_qr_code$', generate_qr_code, name='generate_qr_code'),
     url(r'^create_signature$', create_signature, name='create_signature'),
     url(r'^plan_subscribe$', plan_subscribe, name='plan_subscribe'),
+    url(r'^pix_recived$', pix_recived, name='pix_recived'),
 ]

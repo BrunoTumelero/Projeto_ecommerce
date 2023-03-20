@@ -16,7 +16,6 @@ def login(request):
     if user_email and password:
         user = authenticate(username=user_email, password=password, email=user_email)
         if user is not None:
-            print(user)
             if user.is_consumer and user.is_company:
                 _type = 'consumer_company'
             elif user.is_consumer and not user.is_company and not user.is_staff:
