@@ -20,9 +20,7 @@ def pix_payment(request):
     total_pushased = sum(total_item)
     name_infometion = request.POST.get('name_information', "Campo adicional")
     additional_information = request.POST.get('additional_inormation', "Informação adicional")
-
-    print(value_purchases.product_id)
-    company = value_purchases.product.company
+    company = value_purchases.values('product__company__pk').distinct()
 
     headers = _headers()
     certificado = f'client/payment_api/certificates/{settings.CERT_DEV}'
@@ -51,7 +49,7 @@ def pix_payment(request):
 
     response = requests.request("POST", url, headers=headers, data=payload, cert=certificado)
     
-    save_pix(response.json(), request.pk, company)
+    save_pix(response.json(), request.user.pk, company)
 
     return JsonResponse({'response': response.json()})
 
