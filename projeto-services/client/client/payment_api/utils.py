@@ -7,7 +7,7 @@ import random
 from gerencianet import Gerencianet
 from django.conf import settings
 
-from client.register.models import Pix
+from client.register.models import Pix, Company, Consumers
 
 
 def get_token_api_payment():
@@ -76,16 +76,28 @@ def validation_gn_keys():
     return options
 
 def save_pix(response: json, payer, receiver):
-    if Pix.objects.filter(txid=response.txid).exists():
+    company = Company.objects.get(pk__in=receiver)
+    consumer = Consumers.objects.get(pk=payer)
+    print(company)
+    print(consumer)
+    if Pix.objects.filter(txid=response['txid']).exists():
         try:
-            pix = Pix.objects.get(txid=response.txid)
+            print(111)
+            pix = Pix.objects.get(txid=response['txid'])
         except Pix.MultipleObjectsReturned:
             return json({'message': 'Erro no identificador do pix', 'status': 404})
     else:
-        pix = Pix.objects.update_or_create(txid=response.txid)
-        pix.value = response.valor.original
-        pix.time = response.calendario.criacao
-        pix.payer_id = payer
-        pix.receiver_id = receiver
-        pix.return_pix_id = False
-        pix.save()
+        try:
+            pix = Pix.objects.create(txid=response['txid'], payer=consumer, receiver=company)
+        except TypeError as e:
+            print(e)
+    print(3)
+    pix.value = 10
+    print(3)
+    pix.time = 12
+    print(3)
+    #pix.payer_id = 14
+    print(3)
+    #pix.receiver_id = 13
+    pix.return_pix_id = 0
+    pix.save()
